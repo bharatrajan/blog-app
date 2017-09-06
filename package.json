@@ -1,0 +1,41 @@
+{
+  "name": "blog-app",
+  "version": "0.1.0",
+  "description": "React-Redux based blog app",
+  "private": true,
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-scripts": "1.0.13",
+    "body-parser": "^1.17.1",
+    "cors": "^2.8.3",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.2",
+    "clone": "^2.1.1",
+    "redux": "^3.7.2",
+    "react-redux": "^5.0.5",
+    "react-router": "^4.1.1",
+    "react-router-dom": "4.1.1"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.0"
+  },
+  "scripts": {
+    "start": "concurrently \"npm run start-api\" \"npm run start-client\"",
+    "start-client": "react-scripts start",
+    "start-api": "node server.js",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bharatrajan/blog-app.git"
+  },
+  "author": "Bharat Rajan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bharatrajan/blog-app/issues"
+  },
+  "homepage": "https://github.com/bharatrajan/blog-app#readme"
+}
