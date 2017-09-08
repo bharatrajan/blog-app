@@ -2,6 +2,7 @@ import * as BlogAPI from '../utils/blog-api.js'
 import _ from 'lodash';
 
 export const actionType = {
+  UPDATE_POSTS: 'UPDATE_POSTS',
   RECEIVE_POSTS: 'RECEIVE_POSTS',
   RECEIVE_CATEGORIES: 'RECEIVE_CATEGORIES'
 };
@@ -13,17 +14,9 @@ export const receiveCategories = categories => ({
 
 export const fetchCatogeries = () => dispatch => (
   BlogAPI.getAllCategories().then(
-    resp => {
-        let categories = resp.categories;
-            categories.push({name: "all", path: "all"});
-            categories = _.orderBy(categories, ['name'],['asc']);
-
-        return dispatch(receiveCategories(categories));
-    }
+    resp => dispatch(receiveCategories(_.orderBy(resp.categories, ['name'],['asc'])))
   )
 );
-
-
 
 export const receivePosts = posts => ({
   type: actionType.RECEIVE_POSTS,
@@ -43,5 +36,16 @@ export const fetchPosts = () => dispatch => (
       });
       dispatch(receivePosts(localPosts))
     }
+  )
+);
+
+export const updatePosts = post => ({
+  type: actionType.UPDATE_POSTS,
+  post
+});
+
+export const addPost = (newPost) => dispatch => (
+  BlogAPI.addPost(newPost).then(
+    newPost => dispatch(updatePosts(newPost))
   )
 );

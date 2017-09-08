@@ -1,121 +1,112 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { fetchCatogeries, fetchPosts } from '../actions';
+import util from '../utils/utils.js';
+import serializeForm from 'form-serialize';
+import { fetchCatogeries, addPost } from '../actions';
 
-class addpost extends Component {
+class AddPost extends Component {
 
   state = {
-    isPostsLoaded : false,
-    sortList : [{
-      "label": "vote",
-      "field": "voteScore"
-    }, {
-      "label": "created date",
-      "field": "timestamp"
-    }]
+    validationResults : {}
+  };
+
+  _submitForm = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const postData = serializeForm(event.target, {hash: true})
+
+    let validationResults = {
+      isTitleInvalid: _.isEmpty(postData['title']),
+      isBodyInvalid: _.isEmpty(postData['body']),
+      isOwnerInvalid: _.isEmpty(postData['owner']),
+      isCategoryInvalid: postData['category'] === "Category...",
+    }
+
+    if(!validationResults.isTitleInvalid &&
+        !validationResults.isBodyInvalid &&
+          !validationResults.isOwnerInvalid &&
+            !validationResults.isCategoryInvalid){
+        this.props.addPost({
+          id : util.uuid(),
+          timestamp : new Date().getTime(),
+          voteScore : 1,
+          deleted : false,
+          ...postData
+        });
+        this.setState({
+          validationResults: {}
+        });
+        this.props.history.push("/");
+    }else
+      this.setState({ validationResults });
   }
 
-  _addPost = () => {
-
-  };
-
-  _sortPost = sortOption => {
-      this.setState({
-        "posts": _.orderBy(this.state.posts, [sortOption],['desc'])
-      });
-  };
-
-  _filterByCategory = filterField => {
-    if(filterField === 'all'){
-      this.setState({
-        "posts": this.props.posts
-      });
-      return null;
-    }
-
-    let filteredPosts = [];
-        filteredPosts = this.props.posts.filter( post => {
-          return post.category === filterField
-        });
-
-    this.setState({
-      "posts": filteredPosts
-    });
-  };
-
   componentWillReceiveProps = (newProps) => {
-
-    if(newProps.posts &&
-        newProps.posts.length &&
-          newProps.posts.length !== 0)
-            this.setState({
-              "isPostsLoaded": true,
-              "posts": _.orderBy(newProps.posts, ['voteScore'],['desc'])
-            });
-
-    if(newProps.categories &&
-        newProps.categories.length &&
-          newProps.categories.length !== 0){
-            this.setState({
-              categories: newProps.categories
-            });
-    }
+    this.setState({
+      categories: newProps.categories
+    });
+    return null;
   };
 
   componentDidMount = () => {
     this.props.getAllCategories();
-    this.props.getAllPosts();
     return null;
   };
 
   render() {
-    const {categories, posts, sortList} = this.state;
+    const {categories, validationResults} = this.state;
 
     return (
-      <div className="App">
-
-        <div className="filter-col" >
-          <ul className="filter-list">
-            {categories && (categories.map((category, index) => (
-              <li className="category-item"
-                  onClick={()=> this._filterByCategory(category.name)}
-                  key={index}> {_.startCase(_.toLower(category.name))} </li>
-            )))}
-          </ul>
-        </div>
-        <div className="post-col" >
-          <ul className="post-list">
-          {posts && (posts.map((post, index) => (
-                    <li className="post-item" key={index} hidden={post.deleted}>
-                        <div> {post.title} </div>
-                        <div> {post.body} </div>
-                        <div> {post.time} </div>
-                        <div> {post.voteScore} </div>
-                    </li>
-          )))}
-          </ul>
-        </div>
-        <div className="sort-col" >
-          <ul className="sort-list">
-            {sortList && (sortList.map((sortItem, index) => (
-              <li className="sort-item"
-                  onClick={()=> this._sortPost(sortItem.field)}
-                  key={index}> Sort by {sortItem.label} </li>
-            )))}
-          </ul>
-        </div>
-
+      <div className="add-post">
+        <form className="add-post-form" onSubmit={this._submitForm}>
+            <fieldset>
+              <legend>Post details</legend>
+              <input type="text" name="title" placeholder="title for post ..."/>
+              <span
+                    hidden={!validationResults.isTitleInvalid}
+                    className="invalid-form-entry"> Invalid Title </span>
+              <br/>
+              <textarea rows="4" cols="50" type="multi" name="body" placeholder="body for post ..."/>
+              <span
+                    hidden={!validationResults.isBodyInvalid}
+                    className="invalid-form-entry"> Invalid Post</span>
+              <br/>
+              <input type="text" name="owner" placeholder="author"/>
+              <span
+                    hidden={!validationResults.isOwnerInvalid}
+                    className="invalid-form-entry"> Invalid author name </span>
+              <br/>
+              <select name="category" defaultValue={"Category..."}>
+              <option value={"Category..."} disabled> Category... </option>
+              {!_.isEmpty(categories) && (
+                categories.map((item, index) =>
+                  <option key={index} value={item.name}> {_.startCase(_.toLower(item.name))} </option>
+                )
+              )}
+              </select>
+              <span
+                    hidden={!validationResults.isCategoryInvalid}
+                    className="invalid-form-entry"> Invalid Category</span>
+              <br/>
+              <button> Post </button>
+            </fieldset>
+          </form>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state, propsFromParent) => state;
+const mapStateToProps = (state, propsFromParent) => {
+  let prop = {};
+  if(!_.isEmpty(state.categories))
+      prop.categories = state.categories
+  return prop;
+};
 
 const mapDispatchToProps = dispatch => ({
-  getAllPosts : () => dispatch(fetchPosts()),
+  addPost : (newPost) => dispatch(addPost(newPost)),
   getAllCategories : () => dispatch(fetchCatogeries())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(addpost);
+export default connect(mapStateToProps, mapDispatchToProps)(AddPost);

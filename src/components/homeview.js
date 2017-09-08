@@ -4,7 +4,7 @@ import _ from 'lodash';
 import {Link} from 'react-router-dom';
 import { fetchCatogeries, fetchPosts } from '../actions';
 
-class homeview extends Component {
+class HomeView extends Component {
 
   state = {
     isPostsLoaded : false,
@@ -16,10 +16,6 @@ class homeview extends Component {
       "field": "timestamp"
     }]
   }
-
-  _addPost = () => {
-
-  };
 
   _sortPost = sortOption => {
       this.setState({
@@ -47,26 +43,24 @@ class homeview extends Component {
 
   componentWillReceiveProps = (newProps) => {
 
-    if(newProps.posts &&
-        newProps.posts.length &&
-          newProps.posts.length !== 0)
-            this.setState({
-              "isPostsLoaded": true,
-              "posts": _.orderBy(newProps.posts, ['voteScore'],['desc'])
-            });
+    if(!_.isEmpty(newProps.posts))
+      this.setState({
+        "isPostsLoaded": true,
+        "posts": _.orderBy(newProps.posts, ['voteScore'],['desc'])
+      });
 
-    if(newProps.categories &&
-        newProps.categories.length &&
-          newProps.categories.length !== 0){
-            this.setState({
-              categories: newProps.categories
-            });
-    }
+    if(!_.isEmpty(newProps.categories))
+      this.setState({
+        categories: newProps.categories
+      });
+
   };
 
   componentDidMount = () => {
-    this.props.getAllCategories();
-    this.props.getAllPosts();
+    if(!this.props.isInitialized){
+      this.props.getAllCategories();
+      this.props.getAllPosts();
+    }
     return null;
   };
 
@@ -74,10 +68,13 @@ class homeview extends Component {
     const {categories, posts, sortList} = this.state;
 
     return (
-      <div className="homeview">
+      <div className="home-view">
 
         <div className="filter-col" >
           <ul className="filter-list">
+            <li className="category-item"
+                onClick={()=> this._filterByCategory("all")}>
+                All </li>
             {categories && (categories.map((category, index) => (
               <li className="category-item"
                   onClick={()=> this._filterByCategory(category.name)}
@@ -122,4 +119,4 @@ const mapDispatchToProps = dispatch => ({
   getAllCategories : () => dispatch(fetchCatogeries())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(homeview);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeView);

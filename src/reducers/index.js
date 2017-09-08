@@ -10,6 +10,8 @@ const postsReducer = (state = localState, action) => {
   switch (action.type) {
     case actionType.RECEIVE_POSTS :
       return action.posts;
+    case "UPDATE_POSTS":
+      return state.posts.push(action.post);
     default:
         return state;
   }

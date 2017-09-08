@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import {Route} from 'react-router-dom';
-import { addpost } from './addpost.js';
-import { homeview } from './homeview.js';
+import AddPost from './AddPost.js';
+import HomeView from './HomeView.js';
 
 class App extends Component {
 
@@ -12,11 +12,11 @@ class App extends Component {
       <div className="App">
 
       <Route path="/" exact render={(history) => (
-        <homeview></homeview>
+        <HomeView history={history}></HomeView>
        )}></Route>
 
        <Route path="/addpost" exact render={(windowCtx) => (
-         <addpost></addpost>
+         <AddPost history={windowCtx.history}></AddPost>
        )}></Route>
 
       </div>
