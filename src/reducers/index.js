@@ -1,28 +1,32 @@
 import { combineReducers } from 'redux';
 import { actionType } from '../actions';
+import _ from 'lodash';
 
-const localState = {
+let mainState = {
   posts: [],
   categories: []
 }
 
-const postsReducer = (state = localState, action) => {
+const postsReducer = (posts = mainState.posts, action) => {
   switch (action.type) {
     case actionType.RECEIVE_POSTS :
+      mainState.posts = action.posts;
       return action.posts;
     case "UPDATE_POSTS":
-      return state.posts.push(action.post);
+      mainState.posts.push(action.post);
+      return mainState;
     default:
-        return state;
+        return posts;
   }
 };
 
-const categoryReducer = (state = localState, action) => {
+const categoryReducer = (categories = mainState.categories, action) => {
   switch (action.type) {
     case actionType.RECEIVE_CATEGORIES :
+      mainState.categories = action.categories;
       return action.categories;
     default :
-      return state;
+      return categories;
   }
 }
 
