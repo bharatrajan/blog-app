@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import {Link} from 'react-router-dom';
-import { fetchCatogeries, fetchPosts } from '../actions';
+import { getAllPosts } from '../actions';
 
 class HomeView extends Component {
 
@@ -15,6 +14,25 @@ class HomeView extends Component {
       "label": "created date",
       "field": "timestamp"
     }]
+  }
+
+  componentWillReceiveProps = (newProps) => {
+
+    if(!_.isEmpty(newProps.posts))
+      this.setState({
+        "isPostsLoaded": true,
+        "posts": _.orderBy(newProps.posts, ['voteScore'],['desc'])
+      });
+
+    if(!_.isEmpty(newProps.categories))
+      this.setState({
+        categories: newProps.categories
+      });
+
+  };
+
+  _viewPost = postId => {
+    this.props.history.push(`/viewpost/${postId}`);
   }
 
   _sortPost = sortOption => {
@@ -41,28 +59,6 @@ class HomeView extends Component {
     });
   };
 
-  componentWillReceiveProps = (newProps) => {
-
-    if(!_.isEmpty(newProps.posts))
-      this.setState({
-        "isPostsLoaded": true,
-        "posts": _.orderBy(newProps.posts, ['voteScore'],['desc'])
-      });
-
-    if(!_.isEmpty(newProps.categories))
-      this.setState({
-        categories: newProps.categories
-      });
-
-  };
-
-  componentDidMount = () => {
-    if(!this.props.isInitialized){
-      this.props.getAllCategories();
-      this.props.getAllPosts();
-    }
-    return null;
-  };
 
   render() {
     const {categories, posts, sortList} = this.state;
@@ -85,7 +81,9 @@ class HomeView extends Component {
         <div className="post-col" >
           <ul className="post-list">
           {posts && (posts.map((post, index) => (
-                    <li className="post-item" key={index} hidden={post.deleted}>
+                    <li className="post-item" key={index}
+                        hidden={post.deleted}
+                        onClick={()=> this._viewPost(post.id)}>
                         <div> {post.title} </div>
                         <div> {post.body} </div>
                         <div> {post.time} </div>
@@ -105,7 +103,7 @@ class HomeView extends Component {
         </div>
 
         <div>
-          <Link to="/addpost"> + </Link>
+          <a href="/addpost"> + </a>
         </div>
       </div>
     );
@@ -115,8 +113,7 @@ class HomeView extends Component {
 const mapStateToProps = (state, propsFromParent) => state;
 
 const mapDispatchToProps = dispatch => ({
-  getAllPosts : () => dispatch(fetchPosts()),
-  getAllCategories : () => dispatch(fetchCatogeries())
+  getAllPosts : () => dispatch(getAllPosts()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeView);

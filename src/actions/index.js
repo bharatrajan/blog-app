@@ -2,9 +2,15 @@ import * as BlogAPI from '../utils/blog-api.js'
 import _ from 'lodash';
 
 export const actionType = {
+  GET_POSTS:'GET_POSTS',
   UPDATE_POSTS: 'UPDATE_POSTS',
   RECEIVE_POSTS: 'RECEIVE_POSTS',
-  RECEIVE_CATEGORIES: 'RECEIVE_CATEGORIES'
+
+  GET_COMMENTS: 'GET_COMMENTS',
+  DELETE_COMMENT: 'DELETE_COMMENT',
+  RECEIVE_COMMENTS: 'RECEIVE_COMMENTS',
+
+  RECEIVE_CATEGORIES: 'RECEIVE_CATEGORIES',
 };
 
 export const receiveCategories = categories => ({
@@ -39,9 +45,9 @@ export const fetchPosts = () => dispatch => (
   )
 );
 
-export const updatePosts = post => ({
+export const updatePosts = newPost => ({
   type: actionType.UPDATE_POSTS,
-  post
+  newPost
 });
 
 export const addPost = (newPost) => dispatch => (
@@ -49,3 +55,31 @@ export const addPost = (newPost) => dispatch => (
     newPost => dispatch(updatePosts(newPost))
   )
 );
+
+export const getAllPosts = post => ({
+  type: actionType.GET_POSTS,
+  post
+});
+
+export const fetchComments = postId => dispatch => (
+  BlogAPI.getAllComments(postId).then(
+    resp => dispatch(getCommentsForPost( postId, resp ))
+  )
+);
+
+export const getCommentsForPost = (postId, comments) => ({
+  type: actionType.GET_COMMENTS,
+  comments,
+  postId
+});
+
+export const deleteCommentAPI = commentId => dispatch => (
+  BlogAPI.deleteComment(commentId).then(
+    resp => dispatch(deleteComment( resp ))
+  )
+);
+
+export const deleteComment = (resp) => ({
+  comment: resp,
+  type: actionType.DELETE_COMMENT
+})

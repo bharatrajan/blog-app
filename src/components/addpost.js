@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import _ from 'lodash';
 import util from '../utils/utils.js';
 import serializeForm from 'form-serialize';
-import { fetchCatogeries, addPost } from '../actions';
+import { connect } from 'react-redux';
+import { addPost } from '../actions';
+
 
 class AddPost extends Component {
 
@@ -42,20 +43,10 @@ class AddPost extends Component {
       this.setState({ validationResults });
   }
 
-  componentWillReceiveProps = (newProps) => {
-    this.setState({
-      categories: newProps.categories
-    });
-    return null;
-  };
-
-  componentDidMount = () => {
-    this.props.getAllCategories();
-    return null;
-  };
-
   render() {
-    const {categories, validationResults} = this.state;
+
+    const categories = this.props.categories;
+    const validationResults = this.state.validationResults;
 
     return (
       <div className="add-post">
@@ -92,21 +83,16 @@ class AddPost extends Component {
               <button> Post </button>
             </fieldset>
           </form>
+          <div>
+            <a href="/"> {"<-"} </a>
+          </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state, propsFromParent) => {
-  let prop = {};
-  if(!_.isEmpty(state.categories))
-      prop.categories = state.categories
-  return prop;
-};
-
 const mapDispatchToProps = dispatch => ({
-  addPost : (newPost) => dispatch(addPost(newPost)),
-  getAllCategories : () => dispatch(fetchCatogeries())
+  addPost : (newPost) => dispatch(addPost(newPost))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddPost);
+export default connect(() => ({}), mapDispatchToProps)(AddPost);

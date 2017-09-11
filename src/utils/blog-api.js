@@ -37,7 +37,20 @@ export const addPost = (post) =>
   }).then(res => res.json())
     .then(resp => resp)
 
+export const getAllComments = (postId) =>
+    fetch(`${api}/posts/${postId}/comments`, { headers })
+      .then(res => res.json())
+      .then(comments => comments)
 
+export const deleteComment = (commentId) =>
+    fetch(`${api}/comments/${commentId}`, {
+      method: 'DELETE',
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+      .then(resp => resp);
 
 export const get = (bookId) =>
   fetch(`${api}/books/${bookId}`, { headers })
