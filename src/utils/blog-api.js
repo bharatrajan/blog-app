@@ -52,6 +52,17 @@ export const deleteComment = (commentId) =>
     }).then(res => res.json())
       .then(resp => resp);
 
+export const addComment = (post) =>
+  fetch(`${api}/comments`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(post)
+  }).then(res => res.json())
+    .then(resp => resp)
+
 export const get = (bookId) =>
   fetch(`${api}/books/${bookId}`, { headers })
     .then(res => res.json())

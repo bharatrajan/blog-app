@@ -32,7 +32,8 @@ class HomeView extends Component {
   };
 
   _viewPost = postId => {
-    this.props.history.push(`/viewpost/${postId}`);
+    this.props.history.push(`/viewpost`);
+    //this.props.history.push(`/viewpost/${postId}`);
   }
 
   _sortPost = sortOption => {

@@ -53,7 +53,7 @@ class App extends Component {
          </AddPost>
        )}></Route>
 
-       <Route path="/viewpost" render={(windowCtx, postid) => (
+       <Route path="/viewpost" exact render={(windowCtx, postid) => (
          <ViewPost
           postId={"8xf0y6ziyjabvozdd253nd"}
           history={windowCtx.history}>
@@ -65,10 +65,7 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state, propsFromParent) => {
-  console.log("state", state);
-  return state;
-};
+const mapStateToProps = (state, propsFromParent) => state;
 
 const mapDispatchToProps = dispatch => ({
   getAllPosts : () => dispatch(fetchPosts()),

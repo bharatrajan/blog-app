@@ -19,6 +19,8 @@ class CommentCard extends Component {
           <div> {comment.body} </div>
           <div> {comment.author} </div>
           <div> {comment.voteScore} </div>
+          <br/>
+          <br/>
         </div>
       );
     }

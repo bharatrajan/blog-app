@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import {Link} from 'react-router-dom';
-import { fetchComments } from '../actions';
+import { fetchComments, addComment } from '../actions';
 import CommentCard from './CommentCard.js';
+import serializeForm from 'form-serialize';
+import util from '../utils/utils.js';
+
 
 class ViewPost extends Component {
 
@@ -14,7 +17,39 @@ class ViewPost extends Component {
     }, {
       "label": "created date",
       "field": "timestamp"
-    }]
+    }],
+    commentValidationResults: {}
+  }
+
+
+  _submitForm = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const postData = serializeForm(event.target, {hash: true})
+
+    let commentValidationResults = {
+      isBodyInvalid: _.isEmpty(postData['body']),
+      isOwnerInvalid: _.isEmpty(postData['author'])
+    }
+
+    if(!commentValidationResults.isBodyInvalid &&
+          !commentValidationResults.isOwnerInvalid ){
+        const newCommentBody = {
+          id : util.uuid(),
+          parentId: this.props.postId,
+          timestamp : new Date().getTime(),
+          voteScore : 1,
+          deleted : false,
+          parentDeleted: false,
+          ...postData
+        };
+        this.props.addComment(newCommentBody);
+        this.setState({
+          commentValidationResults: {}
+        });
+        event.target.reset();
+    }else
+      this.setState({ commentValidationResults });
   }
 
   componentDidMount = () => {
@@ -28,22 +63,26 @@ class ViewPost extends Component {
   }
 
   componentWillReceiveProps = (newProps) => {
-
     if(!_.isEmpty(newProps.categories) &&
           !_.isEmpty(newProps.posts)){
             let post = newProps.posts.filter( post => post.id === this.props.postId );
-            let comments = newProps.comments[newProps.postId] || [];
             this.setState({
               post:post[0],
-              comments: _.orderBy(comments, ['voteScore'],['desc']),
               categories: newProps.categories
             });
     }
+    let comments = newProps.comments.filter( comment => comment.parentId === this.props.postId);
+    let enabledComments = comments.filter( comment => !comment.deleted);
+    let shouldShowSortOptions = (enabledComments.length !== 0);
+    this.setState({
+      shouldShowSortOptions,
+      comments: _.orderBy(comments, ['voteScore'],['desc'])
+    })
 
   };
 
   render() {
-    const {categories, post, comments, commentSortOption} = this.state;
+    const {categories, post, comments, commentSortOption, commentValidationResults, shouldShowSortOptions} = this.state;
 
     if(_.isEmpty(categories) || _.isEmpty(post)){
       return(<div className="loading-post"></div>)
@@ -61,8 +100,27 @@ class ViewPost extends Component {
           <br/>
 
           <div className="sub-header"><u>COMMENTS</u></div>
+          <form className="add-comment-form" onSubmit={this._submitForm}>
+              <fieldset>
+                <legend>Add comment</legend>
+                <textarea rows="4" cols="50" type="multi" name="body" placeholder="body for comment ..."/>
+                <span
+                      hidden={!commentValidationResults.isBodyInvalid}
+                      className="invalid-form-entry"> Invalid Comment</span>
+                <br/>
+                <input type="text" name="author" placeholder="author"/>
+                <span
+                      hidden={!commentValidationResults.isOwnerInvalid}
+                      className="invalid-form-entry"> Invalid author name </span>
+                <br/>
+                <button> Add </button>
+              </fieldset>
+            </form>
 
-          {!_.isEmpty(comments) && (
+            <br/>
+            <br/>
+
+          {shouldShowSortOptions && (
             <div className="sort-col" >
               <ul className="sort-list">
                 {commentSortOption.map((sortOption, index) => (
@@ -73,7 +131,8 @@ class ViewPost extends Component {
               </ul>
             </div>
           )}
-
+          <br/>
+          <br/>
           {!_.isEmpty(comments) && (
             comments.map((item, index) =>
               <CommentCard comment={item} key={index} />
@@ -89,10 +148,14 @@ class ViewPost extends Component {
   }
 }
 
-const mapStateToProps = (state, propsFromParent) => state;
+const mapStateToProps = (state, propsFromParent) => {
+  console.log("state", state)
+  return state;
+};
 
 const mapDispatchToProps = dispatch => ({
   getAllComments : (postId) => dispatch(fetchComments(postId)),
+  addComment : (newComment) => dispatch(addComment(newComment))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ViewPost);

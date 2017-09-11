@@ -8,6 +8,7 @@ export const actionType = {
 
   GET_COMMENTS: 'GET_COMMENTS',
   DELETE_COMMENT: 'DELETE_COMMENT',
+  UPDATE_COMMENTS: 'UPDATE_COMMENTS',
   RECEIVE_COMMENTS: 'RECEIVE_COMMENTS',
 
   RECEIVE_CATEGORIES: 'RECEIVE_CATEGORIES',
@@ -82,4 +83,15 @@ export const deleteCommentAPI = commentId => dispatch => (
 export const deleteComment = (resp) => ({
   comment: resp,
   type: actionType.DELETE_COMMENT
-})
+});
+
+export const updateComments = newComment => ({
+  type: actionType.UPDATE_COMMENTS,
+  newComment
+});
+
+export const addComment = (newComment) => dispatch => (
+  BlogAPI.addComment(newComment).then(
+    newComment => dispatch(updateComments(newComment))
+  )
+);
