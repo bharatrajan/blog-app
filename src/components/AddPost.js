@@ -3,7 +3,7 @@ import _ from 'lodash';
 import util from '../utils/utils.js';
 import serializeForm from 'form-serialize';
 import { connect } from 'react-redux';
-import { addPost } from '../actions';
+import { addPost, refreshAction } from '../actions';
 import {Link, withRouter} from 'react-router-dom';
 
 
@@ -12,6 +12,11 @@ class AddPost extends Component {
 
   state = {
     validationResults : {}
+  };
+
+  componentDidMount = () => {
+    console.log("componentDidMount")
+    this.forceUpdate()
   };
 
   _submitForm = (event) => {
@@ -45,10 +50,18 @@ class AddPost extends Component {
       this.setState({ validationResults });
   }
 
+  componentWillReceiveProps = (newProps) => {
+
+    if(!_.isEmpty(newProps.categories))
+      this.setState({
+        categories: newProps.categories
+      });
+
+  };
+
   render() {
 
-    const categories = this.props.categories;
-    const validationResults = this.state.validationResults;
+    const {categories, validationResults} = this.state;
 
     return (
       <div className="add-post">
@@ -86,15 +99,24 @@ class AddPost extends Component {
             </fieldset>
           </form>
           <div>
-            <Link to="/"> {"<-"} </Link>
+            <div onClick={() => {
+              this.props.history.push("/")
+              this.props.refreshAction()}}
+            > {"<-"} </div>
           </div>
       </div>
     );
   }
 }
 
+const mapStateToProps = (state, propsFromParent) => {
+  if(!_.isEmpty(state.categories)) return {categories : state.categories};
+  return {categories : []}
+};
+
 const mapDispatchToProps = dispatch => ({
+  refreshAction : () => dispatch(refreshAction()),
   addPost : (newPost) => dispatch(addPost(newPost))
 });
 
-export default withRouter(connect(() => ({}), mapDispatchToProps)(AddPost));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AddPost));

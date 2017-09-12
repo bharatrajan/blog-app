@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { getAllPosts } from '../actions';
+import { getAllPosts, refreshAction } from '../actions';
 import {Link, withRouter} from 'react-router-dom';
-
+import PropTypes from 'prop-types'
 
 class HomeView extends Component {
+
 
   state = {
     isPostsLoaded : false,
@@ -20,7 +21,9 @@ class HomeView extends Component {
   }
 
   componentWillReceiveProps = (newProps) => {
-
+    this.setState({
+      pathname: newProps.location.pathname
+    })
     if(!_.isEmpty(newProps.posts))
       this.setState({
         "isPostsLoaded": true,
@@ -33,6 +36,8 @@ class HomeView extends Component {
       });
 
   };
+
+  should
 
   _viewPost = postId => {
     this.props.history.push(`/viewpost/${postId}`);
@@ -114,17 +119,23 @@ class HomeView extends Component {
         </div>
 
         <div>
-          <Link to="/addpost"> + </Link>
+          <div onClick={() => {
+            this.props.history.push("/addpost")
+            this.props.refreshAction()}}
+          > {"+"} </div>
         </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state, propsFromParent) => state;
-
+const mapStateToProps = (state, propsFromParent) => {
+  console.log("state", state)
+  return {...state};
+};
 const mapDispatchToProps = dispatch => ({
   getAllPosts : () => dispatch(getAllPosts()),
+  refreshAction : () => dispatch(refreshAction()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomeView));

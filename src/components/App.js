@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import {Route, withRouter, matchPath} from 'react-router-dom';
+import {Route, matchPath, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { fetchCatogeries, fetchPosts, fetchComments } from '../actions';
@@ -40,35 +40,30 @@ class App extends Component {
     return null;
   };
 
-  _getPostId = pathname => {
-    const match = matchPath(pathname, {
-      path: '/viewpost/:postid',
-      exact: true,
-      strict: false
-    });
-    return match.params.postid;
-  }
-
   render() {
     return (
       <div className="App">
 
-      <Route path="/" exact location={window.location} render={(windowCtx) => (
+      <Route path="/" exact render={(windowCtx) => (
         <HomeView
+          match
           location={windowCtx.location}
           history={windowCtx.history}>
         ></HomeView>
        )}></Route>
 
-       <Route path="/addpost" exact location={window.location} render={(windowCtx, categories) => (
+       <Route path="/addpost" exact render={(windowCtx, categories) => (
          <AddPost
+          match
+          location={windowCtx.location}
           history={windowCtx.history}>
          </AddPost>
        )}></Route>
 
-       <Route path="/viewpost/:postid" location={window.location} render={(windowCtx) => (
+       <Route path="/viewpost/:postid" render={(windowCtx) => (
          <ViewPost
-          postId={this._getPostId(windowCtx.location.pathname)}
+          match
+          location={windowCtx.location}
           history={windowCtx.history}>
          </ViewPost>
        )}></Route>

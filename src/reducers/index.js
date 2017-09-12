@@ -21,8 +21,12 @@ const postsReducer = (posts = mainState.posts, action) => {
       mainState.posts.push(action.newPost);
       return mainState.posts.filter( item => true);
 
+    case actionType.DELETE_POST:
+      let filteredPosts = posts.filter(post => post.id !== action.postId);
+      return filteredPosts;
+
     default:
-        return posts;
+        return posts.filter(post=>true);
   }
 };
 
@@ -55,8 +59,8 @@ const commentReducer = (comments = mainState.comments, action) => {
 const categoryReducer = (categories = mainState.categories, action) => {
   switch (action.type) {
     case actionType.RECEIVE_CATEGORIES :
-      mainState.categories = action.categories;
-      return mainState.categories.filter( item => true);
+      categories = action.categories;
+      return categories.filter( item => true);
 
     default :
       return categories.filter( item => true);

@@ -2,7 +2,10 @@ import * as BlogAPI from '../utils/blog-api.js'
 import _ from 'lodash';
 
 export const actionType = {
+  REFRESH:'REFRESH',
+
   GET_POSTS:'GET_POSTS',
+  DELETE_POST: 'DELETE_POST',
   UPDATE_POSTS: 'UPDATE_POSTS',
   RECEIVE_POSTS: 'RECEIVE_POSTS',
 
@@ -13,6 +16,10 @@ export const actionType = {
 
   RECEIVE_CATEGORIES: 'RECEIVE_CATEGORIES',
 };
+
+export const refreshAction = () => ({
+  type: actionType.REFRESH
+});
 
 export const receiveCategories = categories => ({
   type: actionType.RECEIVE_CATEGORIES,
@@ -61,6 +68,19 @@ export const getAllPosts = post => ({
   type: actionType.GET_POSTS,
   post
 });
+
+
+export const deletePostApi = postId => dispatch => (
+  BlogAPI.deletePost(postId).then(
+    resp => dispatch(deletePost( postId, resp ))
+  )
+);
+
+export const deletePost = (postId, resp) => ({
+  postId,
+  type: actionType.DELETE_POST
+});
+
 
 export const fetchComments = postId => dispatch => (
   BlogAPI.getAllComments(postId).then(

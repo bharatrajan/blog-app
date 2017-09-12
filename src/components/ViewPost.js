@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import {Link, withRouter} from 'react-router-dom';
-import { addComment } from '../actions';
+import { addComment , deletePostApi, refreshAction } from '../actions';
 import CommentCard from './CommentCard.js';
 import serializeForm from 'form-serialize';
 import util from '../utils/utils.js';
@@ -36,7 +36,7 @@ class ViewPost extends Component {
           !commentValidationResults.isOwnerInvalid ){
         const newCommentBody = {
           id : util.uuid(),
-          parentId: this.props.postId,
+          parentId: this.props.match.params.postid,
           timestamp : new Date().getTime(),
           voteScore : 1,
           deleted : false,
@@ -59,9 +59,13 @@ class ViewPost extends Component {
   }
 
   componentWillReceiveProps = (newProps) => {
+    this.setState({
+      pathname: newProps.location.pathname
+    })
+
     if(!_.isEmpty(newProps.categories) &&
           !_.isEmpty(newProps.posts)){
-            let post = newProps.posts.filter( post => post.id === this.props.postId );
+            let post = newProps.posts.filter( post => post.id === this.props.match.params.postid );
             this.setState({
               post:post[0],
               categories: newProps.categories
@@ -69,7 +73,7 @@ class ViewPost extends Component {
     }
 
     if(!_.isEmpty(newProps.comments)){
-      let comments = newProps.comments[this.props.postId] || [];
+      let comments = newProps.comments[this.props.match.params.postid] || [];
       let enabledComments = comments.filter( comment => !comment.deleted);
       let shouldShowSortOptions = (enabledComments.length !== 0);
       this.setState({
@@ -84,11 +88,21 @@ class ViewPost extends Component {
   render() {
     const {categories, post, comments, commentSortOption, commentValidationResults, shouldShowSortOptions} = this.state;
 
-    if(_.isEmpty(categories) || _.isEmpty(post)){
+    if(_.isEmpty(categories)){
       return(<div className="loading-post"></div>)
+    }else if( _.isEmpty(post) || post.deleted  ){
+      return(<div>
+        POST DELETED
+        <div>
+          <Link to="/"> {"<-"} </Link>
+        </div>
+        </div>)
     }else{
       return (
         <div className="home-view">
+
+          <div onClick={()=> this.props.deletePost(post.id)}
+          > X </div>
 
           <div className="sub-header"><u>POST</u></div>
           <div className="post-detail">Title : {post.title} </div>
@@ -154,7 +168,9 @@ const mapStateToProps = (state, propsFromParent) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  addComment : (newComment) => dispatch(addComment(newComment))
+  refreshAction : () => dispatch(refreshAction()),
+  deletePost : postId => dispatch(deletePostApi(postId)),
+  addComment : newComment => dispatch(addComment(newComment))
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ViewPost));
