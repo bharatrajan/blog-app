@@ -19,11 +19,6 @@ class HomeView extends Component {
     commentCount:{}
   }
 
-  shouldComponentUpdate = () => {
-    console.log("this.porps ", this.props);
-    return true;
-  }
-
   componentWillReceiveProps = (newProps) => {
 
     if(!_.isEmpty(newProps.posts))
