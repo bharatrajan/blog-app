@@ -32,7 +32,7 @@ export const receivePosts = posts => ({
 
 export const fetchPosts = () => dispatch => (
   BlogAPI.getAllPosts().then(
-    posts => {
+    (posts) => {
       let localPosts = posts.map(post => {
         let ts = post.timestamp.toString();
         if(ts.length !== 13) ts = ts * 1000;

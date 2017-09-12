@@ -1,22 +1,29 @@
 import React, { Component } from 'react';
 import './App.css';
-import {Route} from 'react-router-dom';
+import {Route, withRouter, matchPath} from 'react-router-dom';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { fetchCatogeries, fetchPosts } from '../actions';
+import { fetchCatogeries, fetchPosts, fetchComments } from '../actions';
 import HomeView from './HomeView.js';
 import AddPost from './AddPost.js';
 import ViewPost from './ViewPost.js';
 
 class App extends Component {
 
+  isCommentRequested = false;
+
   componentWillReceiveProps = (newProps) => {
 
-    if(!_.isEmpty(newProps.posts))
+    if(!_.isEmpty(newProps.posts)){
       this.setState({
-        "isPostsLoaded": true,
         "posts": _.orderBy(newProps.posts, ['voteScore'],['desc'])
       });
+
+      if(!this.isCommentRequested){
+        newProps.posts.map( post => this.props.getAllComments(post.id));
+        this.isCommentRequested = true;
+      }
+    }
 
     if(!_.isEmpty(newProps.categories))
       this.setState({
@@ -33,29 +40,35 @@ class App extends Component {
     return null;
   };
 
+  _getPostId = pathname => {
+    const match = matchPath(pathname, {
+      path: '/viewpost/:postid',
+      exact: true,
+      strict: false
+    });
+    return match.params.postid;
+  }
 
   render() {
     return (
       <div className="App">
 
-      <Route path="/" exact render={(windowCtx) => (
+      <Route path="/" exact location={window.location} render={(windowCtx) => (
         <HomeView
-          categories={this.props.categories}
-          posts={this.props.posts}
+          location={windowCtx.location}
           history={windowCtx.history}>
         ></HomeView>
        )}></Route>
 
-       <Route path="/addpost" exact render={(windowCtx, categories) => (
+       <Route path="/addpost" exact location={window.location} render={(windowCtx, categories) => (
          <AddPost
-          categories={this.props.categories}
           history={windowCtx.history}>
          </AddPost>
        )}></Route>
 
-       <Route path="/viewpost" exact render={(windowCtx, postid) => (
+       <Route path="/viewpost/:postid" location={window.location} render={(windowCtx) => (
          <ViewPost
-          postId={"8xf0y6ziyjabvozdd253nd"}
+          postId={this._getPostId(windowCtx.location.pathname)}
           history={windowCtx.history}>
          </ViewPost>
        )}></Route>
@@ -69,7 +82,8 @@ const mapStateToProps = (state, propsFromParent) => state;
 
 const mapDispatchToProps = dispatch => ({
   getAllPosts : () => dispatch(fetchPosts()),
-  getAllCategories : () => dispatch(fetchCatogeries())
+  getAllCategories : () => dispatch(fetchCatogeries()),
+  getAllComments: postId => dispatch(fetchComments(postId))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

@@ -1,13 +1,11 @@
 import { combineReducers } from 'redux';
 import { actionType } from '../actions';
-import _ from 'lodash';
-import util from '../utils/utils.js';
 
 
 let mainState = {
   posts: [],
   categories: [],
-  comments: []
+  comments: {}
 }
 
 const postsReducer = (posts = mainState.posts, action) => {
@@ -31,20 +29,26 @@ const postsReducer = (posts = mainState.posts, action) => {
 const commentReducer = (comments = mainState.comments, action) => {
   switch (action.type) {
     case actionType.GET_COMMENTS :
-      mainState.comments = action.comments;
-      return mainState.comments.filter( item => true);
+      comments[action.postId] = action.comments || [];
+      return {...comments};
 
     case actionType.UPDATE_COMMENTS :
-      mainState.comments.push(action.newComment);
-      return mainState.comments.filter( comment => true);
+      let newCommentParentId = action.newComment.parentId;
+      let commentsForPost = comments[newCommentParentId];
+          commentsForPost.push(action.newComment)
+      comments[newCommentParentId] = commentsForPost;
+      return {...comments};
 
     case actionType.DELETE_COMMENT :
-      let filteredComment = comments.filter( comment => comment.id !== action.comment.id)
-          filteredComment.push(action.comment);
-      return filteredComment;
+      let deletedCommentparentId = action.comment.parentId;
+      let commentForPost = comments[deletedCommentparentId];
+      let filteredComment = commentForPost.filter( comment => comment.id !== action.comment.id)
+          filteredComment.push(action.comment)
+      comments[deletedCommentparentId] = filteredComment;
+      return {...comments};
 
     default :
-      return comments.filter( item => true);
+      return {...comments};
   }
 }
 

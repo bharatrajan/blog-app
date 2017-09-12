@@ -4,6 +4,8 @@ import util from '../utils/utils.js';
 import serializeForm from 'form-serialize';
 import { connect } from 'react-redux';
 import { addPost } from '../actions';
+import {Link, withRouter} from 'react-router-dom';
+
 
 
 class AddPost extends Component {
@@ -84,7 +86,7 @@ class AddPost extends Component {
             </fieldset>
           </form>
           <div>
-            <a href="/"> {"<-"} </a>
+            <Link to="/"> {"<-"} </Link>
           </div>
       </div>
     );
@@ -95,4 +97,4 @@ const mapDispatchToProps = dispatch => ({
   addPost : (newPost) => dispatch(addPost(newPost))
 });
 
-export default connect(() => ({}), mapDispatchToProps)(AddPost);
+export default withRouter(connect(() => ({}), mapDispatchToProps)(AddPost));

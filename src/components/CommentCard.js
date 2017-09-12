@@ -16,9 +16,9 @@ class CommentCard extends Component {
           <div
           onClick={()=> deleteComment(comment.id)}
           > X </div>
-          <div> {comment.body} </div>
-          <div> {comment.author} </div>
-          <div> {comment.voteScore} </div>
+          <div> {comment.author} says {comment.body} </div>
+          <div> Votes : {comment.voteScore} ^ V</div>
+
           <br/>
           <br/>
         </div>

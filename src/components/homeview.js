@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { getAllPosts } from '../actions';
+import {Link, withRouter} from 'react-router-dom';
+
 
 class HomeView extends Component {
 
@@ -13,7 +15,13 @@ class HomeView extends Component {
     }, {
       "label": "created date",
       "field": "timestamp"
-    }]
+    }],
+    commentCount:{}
+  }
+
+  shouldComponentUpdate = () => {
+    console.log("this.porps ", this.props);
+    return true;
   }
 
   componentWillReceiveProps = (newProps) => {
@@ -32,8 +40,7 @@ class HomeView extends Component {
   };
 
   _viewPost = postId => {
-    this.props.history.push(`/viewpost`);
-    //this.props.history.push(`/viewpost/${postId}`);
+    this.props.history.push(`/viewpost/${postId}`);
   }
 
   _sortPost = sortOption => {
@@ -60,6 +67,11 @@ class HomeView extends Component {
     });
   };
 
+  _computeCommentCount = (postId) => {
+    if(_.isEmpty(this.props.comments) || _.isEmpty(this.props.comments[postId])) return 0;
+    let commentsForPosts = this.props.comments[postId];
+    return commentsForPosts.length;
+  }
 
   render() {
     const {categories, posts, sortList} = this.state;
@@ -87,8 +99,11 @@ class HomeView extends Component {
                         onClick={()=> this._viewPost(post.id)}>
                         <div> {post.title} </div>
                         <div> {post.body} </div>
-                        <div> {post.time} </div>
-                        <div> {post.voteScore} </div>
+                        <div> Created at : {post.time} </div>
+                        <div> Votes : {post.voteScore}</div>
+                        <div> Comments :  {this._computeCommentCount(post.id)}</div>
+                        <br/>
+                        <br/>
                     </li>
           )))}
           </ul>
@@ -104,7 +119,7 @@ class HomeView extends Component {
         </div>
 
         <div>
-          <a href="/addpost"> + </a>
+          <Link to="/addpost"> + </Link>
         </div>
       </div>
     );
@@ -117,4 +132,4 @@ const mapDispatchToProps = dispatch => ({
   getAllPosts : () => dispatch(getAllPosts()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomeView));

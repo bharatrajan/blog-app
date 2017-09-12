@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import {Link} from 'react-router-dom';
-import { fetchComments, addComment } from '../actions';
+import {Link, withRouter} from 'react-router-dom';
+import { addComment } from '../actions';
 import CommentCard from './CommentCard.js';
 import serializeForm from 'form-serialize';
 import util from '../utils/utils.js';
@@ -52,10 +52,6 @@ class ViewPost extends Component {
       this.setState({ commentValidationResults });
   }
 
-  componentDidMount = () => {
-    this.props.getAllComments( this.props.postId );
-  };
-
   _sortComments = (sortOption) => {
     this.setState({
       "comments": _.orderBy(this.state.comments, [sortOption],['desc'])
@@ -71,13 +67,17 @@ class ViewPost extends Component {
               categories: newProps.categories
             });
     }
-    let comments = newProps.comments.filter( comment => comment.parentId === this.props.postId);
-    let enabledComments = comments.filter( comment => !comment.deleted);
-    let shouldShowSortOptions = (enabledComments.length !== 0);
-    this.setState({
-      shouldShowSortOptions,
-      comments: _.orderBy(comments, ['voteScore'],['desc'])
-    })
+
+    if(!_.isEmpty(newProps.comments)){
+      let comments = newProps.comments[this.props.postId] || [];
+      let enabledComments = comments.filter( comment => !comment.deleted);
+      let shouldShowSortOptions = (enabledComments.length !== 0);
+      this.setState({
+        shouldShowSortOptions,
+        comments: _.orderBy(comments, ['voteScore'],['desc'])
+      })
+    }
+
 
   };
 
@@ -154,8 +154,7 @@ const mapStateToProps = (state, propsFromParent) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  getAllComments : (postId) => dispatch(fetchComments(postId)),
   addComment : (newComment) => dispatch(addComment(newComment))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewPost);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ViewPost));
