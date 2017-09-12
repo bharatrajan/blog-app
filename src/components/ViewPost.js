@@ -6,6 +6,8 @@ import { addComment , deletePostApi, refreshAction } from '../actions';
 import CommentCard from './CommentCard.js';
 import serializeForm from 'form-serialize';
 import util from '../utils/utils.js';
+import Modal from 'react-modal'
+import EditPost from './EditPost.js';
 
 
 class ViewPost extends Component {
@@ -18,6 +20,8 @@ class ViewPost extends Component {
       "label": "created date",
       "field": "timestamp"
     }],
+    isPostModalOpen: false,
+    isCommentModalOpen: false,
     commentValidationResults: {}
   }
 
@@ -37,7 +41,7 @@ class ViewPost extends Component {
         const newCommentBody = {
           id : util.uuid(),
           parentId: this.props.match.params.postid,
-          timestamp : new Date().getTime(),
+          timestamp : new Date().getTime() ,
           voteScore : 1,
           deleted : false,
           parentDeleted: false,
@@ -85,8 +89,10 @@ class ViewPost extends Component {
 
   };
 
+  closeModal = () => {};
+
   render() {
-    const {categories, post, comments, commentSortOption, commentValidationResults, shouldShowSortOptions} = this.state;
+    const {categories, post, comments, commentSortOption, commentValidationResults, shouldShowSortOptions, isPostModalOpen} = this.state;
 
     if(_.isEmpty(categories)){
       return(<div className="loading-post"></div>)
@@ -101,8 +107,14 @@ class ViewPost extends Component {
       return (
         <div className="home-view">
 
-          <div onClick={()=> this.props.deletePost(post.id)}
-          > X </div>
+          <span onClick={()=> this.props.deletePost(post.id)}
+          > X </span>
+          &nbsp;&nbsp;
+          <span onClick={()=> this.setState({isPostModalOpen: true})}
+          > EDIT </span>
+
+          <br/>
+          <br/>
 
           <div className="sub-header"><u>POST</u></div>
           <div className="post-detail">Title : {post.title} </div>
@@ -156,6 +168,18 @@ class ViewPost extends Component {
           <div>
             <Link to="/"> {"<-"} </Link>
           </div>
+
+          <Modal
+            className='modal'
+            overlayClassName='overlay'
+            isOpen={isPostModalOpen}
+            onRequestClose={this.closeModal}
+            contentLabel='Modal'>
+            {(isPostModalOpen &&
+              <EditPost post={post} closeModal={()=> this.setState({isPostModalOpen: false})} />
+            )}
+          </Modal>
+
         </div>
       );
     }

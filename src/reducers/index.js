@@ -21,6 +21,11 @@ const postsReducer = (posts = mainState.posts, action) => {
       mainState.posts.push(action.newPost);
       return mainState.posts.filter( item => true);
 
+    case actionType.EDIT_POSTS:
+      let filteredPostList = posts.filter(post => post.id !== action.updatedPost.id);
+          filteredPostList.push(action.updatedPost);
+      return filteredPostList;
+
     case actionType.DELETE_POST:
       let filteredPosts = posts.filter(post => post.id !== action.postId);
       return filteredPosts;
@@ -41,6 +46,15 @@ const commentReducer = (comments = mainState.comments, action) => {
       let commentsForPost = comments[newCommentParentId];
           commentsForPost.push(action.newComment)
       comments[newCommentParentId] = commentsForPost;
+      return {...comments};
+
+    case actionType.EDIT_COMMENT:
+    let updatedCommentParentId = action.updatedComment.parentId;
+    let updatedCommentList = comments[updatedCommentParentId];
+    let updatedCommentListFiltered = updatedCommentList.filter(comment => comment.id !== action.updatedComment.id)
+        updatedCommentListFiltered.push(action.updatedComment);
+
+      comments[updatedCommentParentId] = updatedCommentListFiltered;
       return {...comments};
 
     case actionType.DELETE_COMMENT :

@@ -25,6 +25,16 @@ export const getPostsInCategory = (category) =>
     .then(res => res.json())
     .then(posts => posts)
 
+export const editPostApi = (postId, body) =>
+  fetch(`${api}/posts/${postId}`, {
+    method: 'PUT',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  }).then(res => res.json())
+    .then(resp => resp)
 
 export const addPost = (post) =>
   fetch(`${api}/posts`, {
@@ -73,33 +83,13 @@ export const addComment = (post) =>
   }).then(res => res.json())
     .then(resp => resp)
 
-export const get = (bookId) =>
-  fetch(`${api}/books/${bookId}`, { headers })
-    .then(res => res.json())
-    .then(data => data.book)
-
-export const getAll = () =>
-  fetch(`${api}/books`, { headers })
-    .then(res => res.json())
-    .then(data => data.books)
-
-export const update = (book, shelf) =>
-  fetch(`${api}/books/${book.id}`, {
+export const editCommentApi = (commentId, body) =>
+  fetch(`${api}/comments/${commentId}`, {
     method: 'PUT',
     headers: {
       ...headers,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ shelf })
+    body: JSON.stringify(body)
   }).then(res => res.json())
-
-export const search = (query, maxResults) =>
-  fetch(`${api}/search`, {
-    method: 'POST',
-    headers: {
-      ...headers,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ query, maxResults })
-  }).then(res => res.json())
-    .then(data => data.books)
+    .then(resp => resp)
