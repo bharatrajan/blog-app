@@ -4,6 +4,9 @@ import _ from 'lodash';
 import util from '../utils/utils.js';
 import { getAllPosts, votePostApi } from '../actions';
 import {withRouter} from 'react-router-dom';
+import PlusCircle from 'react-icons/lib/fa/plus-circle';
+import VoteDown from 'react-icons/lib/fa/angle-down';
+import VoteUp from 'react-icons/lib/fa/angle-up';
 
 class HomeView extends Component {
   state = {
@@ -85,21 +88,21 @@ class HomeView extends Component {
                       <div className="post-item" key={index}
                           hidden={post.deleted}
                           onClick={()=> this._viewPost(post.id)}>
-                          <div> {post.title} </div>
-                          <div> {post.body} </div>
-                          <div> Created at : {util.ts2Time(post.timestamp)} </div>
-                          <div> 
-                            Votes : {post.voteScore}
-                            <span onClick={(event)=> {event.preventDefault();
-                                                      event.stopPropagation();  
-                                                      this.changeVote(post.id, "downVote")}} > V </span>
-                            <span onClick={(event)=> {event.preventDefault();
-                                                      event.stopPropagation();
-                                                      this.changeVote(post.id, "upVote")}} > ^ </span>                            
-                          </div>
-                          <div> Comments :  {this._computeCommentCount(post.id)}</div>
-                          <br/>
-                          <br/>
+                          <div className="post-wrapper">
+                              <div className="post-title"> {post.title} </div>
+                              <div> {post.body} </div>
+                              <div><i> Created at : {util.ts2Time(post.timestamp)} </i></div>
+                              <div className="right-align"> 
+                                <span onClick={(event)=> {event.preventDefault();
+                                                          event.stopPropagation();  
+                                                          this.changeVote(post.id, "downVote")}} > <VoteDown size={50}/> </span>
+                                vote({post.voteScore})                                                      
+                                <span onClick={(event)=> {event.preventDefault();
+                                                          event.stopPropagation();
+                                                          this.changeVote(post.id, "upVote")}} > <VoteUp size={50}/> </span>                            
+                              </div>
+                              <div className="right-align"> Comments :  {this._computeCommentCount(post.id)}</div>
+                            </div>      
                       </div>
             )))}
             </div>
@@ -116,7 +119,7 @@ class HomeView extends Component {
          </div> 
          
          <div>
-          <div onClick={() => this.props.history.push("/addpost")}> {"+"} </div>
+          <div className="add-icon" onClick={() => this.props.history.push("/addpost")}> <PlusCircle size={50}/> </div>
          </div>
       </div>
     );

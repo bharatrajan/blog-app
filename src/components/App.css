@@ -38,10 +38,11 @@ Raleway
 .filter-col{
   cursor: pointer;
   min-width: 70px;
+  padding-right: 20px;    
 }
 
 .post-col{
-  padding: 0px 20px;
+  border: 1px solid rgba(45, 56, 62, 0.2);
   width: 750px;
   cursor: pointer;
 }
@@ -49,6 +50,7 @@ Raleway
 .sort-col{
   cursor: pointer;
   min-width: 180px;
+  padding-left:20px;  
 }
 
 .selectedOption{
@@ -56,8 +58,29 @@ Raleway
 }
 
 .category-item, .sort-item{
-  font: 20px/20px RalewayEL;
+  font: 20px/20px Raleway;
   padding-top: 10px; 
+}
+
+.right-align{
+  text-align: right;
+}
+
+.add-icon{
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+.post-item{
+  background: rgba(243, 239, 225, 0.34);
+  border-bottom: 2px solid #FFF;
+}
+.post-wrapper{
+  padding: 10px;
+  font: bolder 15px/25px Raleway;  
+}
+.post-title{
+  font: bolder 25px/35px RalewayEL;    
 }
 
 .overlay {
