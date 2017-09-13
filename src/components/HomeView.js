@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import util from '../utils/utils.js';
 import { getAllPosts, refreshAction } from '../actions';
 import {withRouter} from 'react-router-dom';
 class HomeView extends Component {
@@ -97,7 +98,7 @@ class HomeView extends Component {
                         onClick={()=> this._viewPost(post.id)}>
                         <div> {post.title} </div>
                         <div> {post.body} </div>
-                        <div> Created at : {post.time} </div>
+                        <div> Created at : {util.ts2Time(post.timestamp)} </div>
                         <div> Votes : {post.voteScore}</div>
                         <div> Comments :  {this._computeCommentCount(post.id)}</div>
                         <br/>

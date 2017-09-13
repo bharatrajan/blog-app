@@ -13,6 +13,7 @@ export const actionType = {
 
   GET_COMMENTS: 'GET_COMMENTS',
   EDIT_COMMENT: 'EDIT_COMMENT',
+  VOTE_COMMENT: 'VOTE_COMMENT',
   DELETE_COMMENT: 'DELETE_COMMENT',
   UPDATE_COMMENTS: 'UPDATE_COMMENTS',
   RECEIVE_COMMENTS: 'RECEIVE_COMMENTS',
@@ -42,17 +43,7 @@ export const receivePosts = posts => ({
 
 export const fetchPosts = () => dispatch => (
   BlogAPI.getAllPosts().then(
-    (posts) => {
-      let localPosts = posts.map(post => {
-        let ts = post.timestamp.toString();
-        if(ts.length !== 13) ts = ts * 1000;
-        let tsObj = new Date(post.timestamp);
-
-        post.time = tsObj.getMonth().toString() + "/" +  tsObj.getDate().toString() + "/" + tsObj.getFullYear().toString() ;
-        return post;
-      });
-      dispatch(receivePosts(localPosts))
-    }
+    posts => dispatch(receivePosts(posts))
   )
 );
 
@@ -63,14 +54,7 @@ export const editPost = updatedPost => ({
 
 export const editPostApi = (postId, body) => dispatch => (
   BlogAPI.editPostApi(postId, body).then(
-    (updatedPost) => {
-      let ts = updatedPost.timestamp.toString();
-      if(ts.length !== 13) ts = ts * 1000;
-      let tsObj = new Date(updatedPost.timestamp);
-
-      updatedPost.time = tsObj.getMonth().toString() + "/" +  tsObj.getDate().toString() + "/" + tsObj.getFullYear().toString() ;
-      return dispatch(editPost(updatedPost))
-    }
+    (updatedPost) => dispatch(editPost(updatedPost))
   )
 );
 
@@ -104,14 +88,7 @@ export const deletePost = (postId, resp) => ({
 
 export const votePostApi = (postId, body) => dispatch => (
   BlogAPI.votePost(postId, body).then(
-    resp => {
-      let ts = resp.timestamp.toString();
-      if(ts.length !== 13) ts = ts * 1000;
-      let tsObj = new Date(resp.timestamp);
-      resp.time = tsObj.getMonth().toString() + "/" +  tsObj.getDate().toString() + "/" + tsObj.getFullYear().toString() ;
-
-      dispatch(votePost( resp ))
-    }
+    resp => dispatch(votePost( resp ))
   )
 );
 
@@ -121,21 +98,9 @@ export const votePost = (postWithUpdatedVote) => ({
 });
 
 
-
-
 export const fetchComments = postId => dispatch => (
   BlogAPI.getAllComments(postId).then(
-    (resp) => {
-      let localComments = resp.map(comment => {
-        let ts = comment.timestamp.toString();
-        if(ts.length !== 13) ts = ts * 1000;
-        let tsObj = new Date(comment.timestamp);
-
-        comment.time = tsObj.getMonth().toString() + "/" +  tsObj.getDate().toString() + "/" + tsObj.getFullYear().toString() ;
-        return comment;
-      });
-      dispatch(getCommentsForPost(postId, localComments))
-    }
+    (resp) => dispatch(getCommentsForPost(postId, resp))
   )
 );
 
@@ -175,13 +140,17 @@ export const editComment = updatedComment => ({
 
 export const editCommentApi = (commentId, body) => dispatch => (
   BlogAPI.editCommentApi(commentId, body).then(
-    updatedComment => {
-      let ts = updatedComment.timestamp.toString();
-      if(ts.length !== 13) ts = ts * 1000;
-      let tsObj = new Date(updatedComment.timestamp);
-
-      updatedComment.time = tsObj.getMonth().toString() + "/" +  tsObj.getDay().toString() + "/" + tsObj.getFullYear().toString() ;
-      dispatch(editComment(updatedComment))
-    }
+    updatedComment => dispatch(editComment(updatedComment))
   )
 );
+
+export const voteCommentApi = (commentId, body) => dispatch => (
+  BlogAPI.voteComment(commentId, body).then(
+    resp => dispatch(voteComment( resp ))
+  )
+);
+
+export const voteComment = (commentWithUpdatedVote) => ({
+  commentWithUpdatedVote,
+  type: actionType.VOTE_COMMENT
+});

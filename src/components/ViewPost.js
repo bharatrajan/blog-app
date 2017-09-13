@@ -125,7 +125,7 @@ class ViewPost extends Component {
           <div className="post-detail">Body : {post.body} </div>
           <div className="post-detail">Owner : {post.author} </div>
           <div className="post-detail">Votes : {post.voteScore} </div>
-          <div className="post-detail">Created at : {post.time} </div>
+          <div className="post-detail">Created at : {util.ts2Time(post.timestamp)} </div>
           <div>
             <span onClick={()=> this.changeVote(post.id, "downVote")} > V </span>
             <span onClick={()=> this.changeVote(post.id, "upVote")} > ^ </span>

@@ -104,3 +104,14 @@ export const editCommentApi = (commentId, body) =>
     body: JSON.stringify(body)
   }).then(res => res.json())
     .then(resp => resp)
+
+export const voteComment = (commentid, body) =>
+  fetch(`${api}/comments/${commentid}`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  }).then(res => res.json())
+    .then(resp => resp)

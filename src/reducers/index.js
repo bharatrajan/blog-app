@@ -54,10 +54,10 @@ const commentReducer = (comments = mainState.comments, action) => {
       return {...comments};
 
     case actionType.EDIT_COMMENT:
-    let updatedCommentParentId = action.updatedComment.parentId;
-    let updatedCommentList = comments[updatedCommentParentId];
-    let updatedCommentListFiltered = updatedCommentList.filter(comment => comment.id !== action.updatedComment.id)
-        updatedCommentListFiltered.push(action.updatedComment);
+      let updatedCommentParentId = action.updatedComment.parentId;
+      let updatedCommentList = comments[updatedCommentParentId];
+      let updatedCommentListFiltered = updatedCommentList.filter(comment => comment.id !== action.updatedComment.id)
+          updatedCommentListFiltered.push(action.updatedComment);
 
       comments[updatedCommentParentId] = updatedCommentListFiltered;
       return {...comments};
@@ -69,6 +69,14 @@ const commentReducer = (comments = mainState.comments, action) => {
           filteredComment.push(action.comment)
       comments[deletedCommentparentId] = filteredComment;
       return {...comments};
+
+    case actionType.VOTE_COMMENT:
+    let voteChangedCommentParentId = action.commentWithUpdatedVote.parentId;
+    let voteChangedCommentList = comments[voteChangedCommentParentId];
+    let voteUNChangedCommentList = voteChangedCommentList.filter(comment => comment.id !== action.commentWithUpdatedVote.id)
+        voteUNChangedCommentList.push(action.commentWithUpdatedVote);
+    comments[voteChangedCommentParentId] = voteUNChangedCommentList;
+    return {...comments};
 
     default :
       return {...comments};
