@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import util from '../utils/utils.js';
-import { getAllPosts } from '../actions';
+import { getAllPosts, votePostApi } from '../actions';
 import {withRouter} from 'react-router-dom';
 
 class HomeView extends Component {
@@ -17,6 +17,10 @@ class HomeView extends Component {
     selectedSortOption: "voteScore",
     selectedFilterOption: "all",
     commentCount:{}
+  };
+  
+  changeVote = (postId, option) => {
+    this.props.votePost(postId, {option})
   };
 
   _viewPost = postId => {
@@ -84,7 +88,15 @@ class HomeView extends Component {
                           <div> {post.title} </div>
                           <div> {post.body} </div>
                           <div> Created at : {util.ts2Time(post.timestamp)} </div>
-                          <div> Votes : {post.voteScore}</div>
+                          <div> 
+                            Votes : {post.voteScore}
+                            <span onClick={(event)=> {event.preventDefault();
+                                                      event.stopPropagation();  
+                                                      this.changeVote(post.id, "downVote")}} > V </span>
+                            <span onClick={(event)=> {event.preventDefault();
+                                                      event.stopPropagation();
+                                                      this.changeVote(post.id, "upVote")}} > ^ </span>                            
+                          </div>
                           <div> Comments :  {this._computeCommentCount(post.id)}</div>
                           <br/>
                           <br/>
@@ -114,6 +126,7 @@ class HomeView extends Component {
 const mapStateToProps = (state, propsFromParent) => state;
 const mapDispatchToProps = dispatch => ({
   getAllPosts : () => dispatch(getAllPosts()),
+  votePost : (postId, voteOption) => {dispatch(votePostApi(postId, voteOption))}  
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomeView));
