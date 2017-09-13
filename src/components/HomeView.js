@@ -4,9 +4,8 @@ import _ from 'lodash';
 import util from '../utils/utils.js';
 import { getAllPosts } from '../actions';
 import {withRouter} from 'react-router-dom';
+
 class HomeView extends Component {
-
-
   state = {
     sortList : [{
       "label": "vote",
@@ -16,34 +15,23 @@ class HomeView extends Component {
       "field": "timestamp"
     }],
     selectedSortOption: "voteScore",
+    selectedFilterOption: "all",
     commentCount:{}
-  }
+  };
 
   _viewPost = postId => {
     this.props.history.push(`/viewpost/${postId}`);
   }
 
   _sortPost = sortOption => {
-      this.setState({
-        "selectedSortOption": sortOption
-      });
+    this.setState({
+      "selectedSortOption": sortOption
+    });
   };
 
   _filterByCategory = filterField => {
-    if(filterField === 'all'){
-      this.setState({
-        "posts": this.props.posts
-      });
-      return null;
-    }
-
-    let filteredPosts = [];
-        filteredPosts = this.props.posts.filter( post => {
-          return post.category === filterField
-        });
-
     this.setState({
-      "posts": filteredPosts
+      "selectedFilterOption": filterField
     });
   };
 
@@ -57,9 +45,14 @@ class HomeView extends Component {
   render() {
     if(_.isEmpty(this.props.categories) || _.isEmpty(this.props.posts)) return(<div> Loading . . . </div>);
 
-    const {categories} = this.props;
-    const {sortList, selectedSortOption} = this.state;
-    const posts = _.orderBy(this.props.posts, [selectedSortOption],['desc']);
+    let {categories, posts} = this.props;
+    const {sortList, selectedSortOption, selectedFilterOption} = this.state;
+    
+    if(selectedFilterOption !== 'all')
+      posts = posts.filter(post => post.category === selectedFilterOption)
+
+    posts = _.orderBy(posts, [selectedSortOption],['desc']);
+
     
 
     return (
