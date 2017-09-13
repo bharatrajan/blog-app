@@ -45,18 +45,10 @@ class AddPost extends Component {
       this.setState({ validationResults });
   }
 
-  componentWillReceiveProps = (newProps) => {
-
-    if(!_.isEmpty(newProps.categories))
-      this.setState({
-        categories: newProps.categories
-      });
-
-  };
-
   render() {
 
-    const {categories, validationResults} = this.state;
+    const {categories} = this.props;
+    const {validationResults} = this.state;
 
     return (
       <div className="add-post">

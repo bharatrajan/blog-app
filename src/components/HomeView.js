@@ -8,7 +8,6 @@ class HomeView extends Component {
 
 
   state = {
-    isPostsLoaded : false,
     sortList : [{
       "label": "vote",
       "field": "voteScore"
@@ -16,27 +15,9 @@ class HomeView extends Component {
       "label": "created date",
       "field": "timestamp"
     }],
+    selectedSortOption: "voteScore",
     commentCount:{}
   }
-
-  componentWillReceiveProps = (newProps) => {
-    this.setState({
-      pathname: newProps.location.pathname
-    })
-    if(!_.isEmpty(newProps.posts))
-      this.setState({
-        "isPostsLoaded": true,
-        "posts": _.orderBy(newProps.posts, ['voteScore'],['desc'])
-      });
-
-    if(!_.isEmpty(newProps.categories))
-      this.setState({
-        categories: newProps.categories
-      });
-
-  };
-
-  should
 
   _viewPost = postId => {
     this.props.history.push(`/viewpost/${postId}`);
@@ -44,7 +25,7 @@ class HomeView extends Component {
 
   _sortPost = sortOption => {
       this.setState({
-        "posts": _.orderBy(this.state.posts, [sortOption],['desc'])
+        "selectedSortOption": sortOption
       });
   };
 
@@ -73,7 +54,12 @@ class HomeView extends Component {
   }
 
   render() {
-    const {categories, posts, sortList} = this.state;
+    if(_.isEmpty(this.props.categories) || _.isEmpty(this.props.posts)) return(<div> Loading . . . </div>);
+
+    const {categories} = this.props;
+    const {sortList, selectedSortOption} = this.state;
+    const posts = _.orderBy(this.props.posts, [selectedSortOption],['desc']);
+    
 
     return (
       <div className="home-view">
