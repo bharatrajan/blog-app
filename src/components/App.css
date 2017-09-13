@@ -1,24 +1,63 @@
-.App {
+/*
+RalewayEL
+Raleway
+*/
+
+.display-flex{
+  display: -webkit-flex;
+  display: -ms-flex;
+  display: flex;  
+}
+
+.justify-center{
+  justify-content: center;
+  -webkit-justify-content: center;
+  -ms-justify-content: center;
+}
+
+.align-center{
+  align-items: center;
+  -webkit-align-items: center;
+  -ms-align-items: center;   
+}
+
+.home-view-header{
+  background: rgba(45, 56, 62, 1);
+  width: 100%;
+  height: 50px;
   text-align: center;
+  padding-top: 30px;
+  color: #FFF;
+  font: 30px/18px Raleway;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.home-view.content{
+  width: 100%;
 }
 
-.add-post-form{
-  text-align: left;
-}
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.filter-col{
+  cursor: pointer;
+  min-width: 70px;
 }
 
-.App-intro {
-  font-size: large;
+.post-col{
+  padding: 0px 20px;
+  width: 750px;
+  cursor: pointer;
+}
+
+.sort-col{
+  cursor: pointer;
+  min-width: 180px;
+}
+
+.selectedOption{
+  border-bottom: 2px solid #b3c3d8;
+}
+
+.category-item, .sort-item{
+  font: 20px/20px RalewayEL;
+  padding-top: 10px; 
 }
 
 .overlay {

@@ -1,0 +1,14 @@
+/* FONT */
+@font-face {
+    font-family: 'RalewayEL';
+    font-style: normal;
+    font-weight: 200;
+    src: local('Raleway ExtraLight'), local('Raleway-ExtraLight'), url(./fonts/raleway1.woff) format('woff');
+  }
+  @font-face {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Raleway'), url(./fonts/raleway2.woff) format('woff');
+  }
+  
