@@ -50,7 +50,8 @@ class HomeView extends Component {
   _computeCommentCount = (postId) => {
     if(_.isEmpty(this.props.comments) || _.isEmpty(this.props.comments[postId])) return 0;
     let commentsForPosts = this.props.comments[postId];
-    return commentsForPosts.length;
+    let enabledCommentsForPosts = commentsForPosts.filter( comment => !comment.deleted );
+    return enabledCommentsForPosts.length;
   }
 
   render() {
