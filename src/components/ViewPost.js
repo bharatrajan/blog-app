@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import {Link, withRouter} from 'react-router-dom';
-import { addComment , deletePostApi, refreshAction } from '../actions';
+import { addComment , deletePostApi, refreshAction, votePostApi } from '../actions';
 import CommentCard from './CommentCard.js';
 import serializeForm from 'form-serialize';
 import util from '../utils/utils.js';
@@ -89,6 +89,10 @@ class ViewPost extends Component {
 
   };
 
+  changeVote = (postId, option) => {
+    this.props.votePost(postId, {option})
+  };
+
   closeModal = () => {};
 
   render() {
@@ -122,6 +126,10 @@ class ViewPost extends Component {
           <div className="post-detail">Owner : {post.author} </div>
           <div className="post-detail">Votes : {post.voteScore} </div>
           <div className="post-detail">Created at : {post.time} </div>
+          <div>
+            <span onClick={()=> this.changeVote(post.id, "downVote")} > V </span>
+            <span onClick={()=> this.changeVote(post.id, "upVote")} > ^ </span>
+          </div>
           <br/>
           <br/>
 
@@ -186,15 +194,13 @@ class ViewPost extends Component {
   }
 }
 
-const mapStateToProps = (state, propsFromParent) => {
-  console.log("state", state)
-  return state;
-};
+const mapStateToProps = (state, propsFromParent) => state;
 
 const mapDispatchToProps = dispatch => ({
   refreshAction : () => dispatch(refreshAction()),
   deletePost : postId => dispatch(deletePostApi(postId)),
-  addComment : newComment => dispatch(addComment(newComment))
+  addComment : newComment => dispatch(addComment(newComment)),
+  votePost : (postId, voteOption) => {dispatch(votePostApi(postId, voteOption))}
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ViewPost));

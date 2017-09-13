@@ -30,6 +30,11 @@ const postsReducer = (posts = mainState.posts, action) => {
       let filteredPosts = posts.filter(post => post.id !== action.postId);
       return filteredPosts;
 
+    case actionType.VOTE_POST:
+      let filteredPostsList = posts.filter(post => post.id !== action.postWithUpdatedVote.id);
+          filteredPostsList.push(action.postWithUpdatedVote);
+      return filteredPostsList;
+
     default:
         return posts.filter(post=>true);
   }

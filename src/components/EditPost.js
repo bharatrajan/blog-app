@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import util from '../utils/utils.js';
 import serializeForm from 'form-serialize';
 import { connect } from 'react-redux';
 import { editPostApi } from '../actions';
-import {Link, withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 
 
 

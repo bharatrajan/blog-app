@@ -4,7 +4,7 @@ import util from '../utils/utils.js';
 import serializeForm from 'form-serialize';
 import { connect } from 'react-redux';
 import { addPost, refreshAction } from '../actions';
-import {Link, withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 
 
 
@@ -12,11 +12,6 @@ class AddPost extends Component {
 
   state = {
     validationResults : {}
-  };
-
-  componentDidMount = () => {
-    console.log("componentDidMount")
-    this.forceUpdate()
   };
 
   _submitForm = (event) => {

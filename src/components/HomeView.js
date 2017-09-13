@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { getAllPosts, refreshAction } from '../actions';
-import {Link, withRouter} from 'react-router-dom';
-import PropTypes from 'prop-types'
-
+import {withRouter} from 'react-router-dom';
 class HomeView extends Component {
 
 
@@ -129,10 +127,7 @@ class HomeView extends Component {
   }
 }
 
-const mapStateToProps = (state, propsFromParent) => {
-  console.log("state", state)
-  return {...state};
-};
+const mapStateToProps = (state, propsFromParent) => state;
 const mapDispatchToProps = dispatch => ({
   getAllPosts : () => dispatch(getAllPosts()),
   refreshAction : () => dispatch(refreshAction()),

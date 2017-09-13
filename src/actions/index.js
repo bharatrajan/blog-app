@@ -5,6 +5,7 @@ export const actionType = {
   REFRESH:'REFRESH',
 
   GET_POSTS:'GET_POSTS',
+  VOTE_POST: 'VOTE_POST',
   EDIT_POSTS: 'EDIT_POSTS',
   DELETE_POST: 'DELETE_POST',
   UPDATE_POSTS: 'UPDATE_POSTS',
@@ -100,6 +101,26 @@ export const deletePost = (postId, resp) => ({
   postId,
   type: actionType.DELETE_POST
 });
+
+export const votePostApi = (postId, body) => dispatch => (
+  BlogAPI.votePost(postId, body).then(
+    resp => {
+      let ts = resp.timestamp.toString();
+      if(ts.length !== 13) ts = ts * 1000;
+      let tsObj = new Date(resp.timestamp);
+      resp.time = tsObj.getMonth().toString() + "/" +  tsObj.getDate().toString() + "/" + tsObj.getFullYear().toString() ;
+
+      dispatch(votePost( resp ))
+    }
+  )
+);
+
+export const votePost = (postWithUpdatedVote) => ({
+  postWithUpdatedVote,
+  type: actionType.VOTE_POST
+});
+
+
 
 
 export const fetchComments = postId => dispatch => (

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import {Route, matchPath, withRouter} from 'react-router-dom';
+import {Route, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { fetchCatogeries, fetchPosts, fetchComments } from '../actions';
