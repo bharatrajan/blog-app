@@ -23,13 +23,7 @@
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
-    "concurrently": "^3.5.0",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-config-prettier": "^2.4.0",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.3.0",
-    "prettier": "^1.6.1"
+    "concurrently": "^3.5.0"
   },
   "scripts": {
     "start": "concurrently \"npm run start-api\" \"npm run start-client\"",
