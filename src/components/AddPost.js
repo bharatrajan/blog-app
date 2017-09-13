@@ -3,7 +3,7 @@ import _ from 'lodash';
 import util from '../utils/utils.js';
 import serializeForm from 'form-serialize';
 import { connect } from 'react-redux';
-import { addPost, refreshAction } from '../actions';
+import { addPost } from '../actions';
 import {withRouter} from 'react-router-dom';
 
 
@@ -94,10 +94,7 @@ class AddPost extends Component {
             </fieldset>
           </form>
           <div>
-            <div onClick={() => {
-              this.props.history.push("/")
-              this.props.refreshAction()}}
-            > {"<-"} </div>
+            <div onClick={() => this.props.history.push("/")}> {"<-"} </div>
           </div>
       </div>
     );
@@ -110,7 +107,6 @@ const mapStateToProps = (state, propsFromParent) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  refreshAction : () => dispatch(refreshAction()),
   addPost : (newPost) => dispatch(addPost(newPost))
 });
 

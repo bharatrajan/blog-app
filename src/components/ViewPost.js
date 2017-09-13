@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import {Link, withRouter} from 'react-router-dom';
-import { addComment , deletePostApi, refreshAction, votePostApi } from '../actions';
+import { addComment , deletePostApi, votePostApi } from '../actions';
 import CommentCard from './CommentCard.js';
 import serializeForm from 'form-serialize';
 import util from '../utils/utils.js';
@@ -197,7 +197,6 @@ class ViewPost extends Component {
 const mapStateToProps = (state, propsFromParent) => state;
 
 const mapDispatchToProps = dispatch => ({
-  refreshAction : () => dispatch(refreshAction()),
   deletePost : postId => dispatch(deletePostApi(postId)),
   addComment : newComment => dispatch(addComment(newComment)),
   votePost : (postId, voteOption) => {dispatch(votePostApi(postId, voteOption))}

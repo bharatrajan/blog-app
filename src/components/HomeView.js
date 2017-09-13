@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import util from '../utils/utils.js';
-import { getAllPosts, refreshAction } from '../actions';
+import { getAllPosts } from '../actions';
 import {withRouter} from 'react-router-dom';
 class HomeView extends Component {
 
@@ -118,10 +118,7 @@ class HomeView extends Component {
         </div>
 
         <div>
-          <div onClick={() => {
-            this.props.history.push("/addpost")
-            this.props.refreshAction()}}
-          > {"+"} </div>
+          <div onClick={() => this.props.history.push("/addpost")}> {"+"} </div>
         </div>
       </div>
     );
@@ -131,7 +128,6 @@ class HomeView extends Component {
 const mapStateToProps = (state, propsFromParent) => state;
 const mapDispatchToProps = dispatch => ({
   getAllPosts : () => dispatch(getAllPosts()),
-  refreshAction : () => dispatch(refreshAction()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomeView));

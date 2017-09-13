@@ -2,8 +2,6 @@ import * as BlogAPI from '../utils/blog-api.js'
 import _ from 'lodash';
 
 export const actionType = {
-  REFRESH:'REFRESH',
-
   GET_POSTS:'GET_POSTS',
   VOTE_POST: 'VOTE_POST',
   EDIT_POSTS: 'EDIT_POSTS',
@@ -20,10 +18,6 @@ export const actionType = {
 
   RECEIVE_CATEGORIES: 'RECEIVE_CATEGORIES',
 };
-
-export const refreshAction = () => ({
-  type: actionType.REFRESH
-});
 
 export const receiveCategories = categories => ({
   type: actionType.RECEIVE_CATEGORIES,
