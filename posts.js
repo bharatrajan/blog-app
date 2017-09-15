@@ -13,6 +13,16 @@ const defaultData = {
     voteScore: 6,
     deleted: false 
   },
+  "4c515ecf-e02f-4b52-bedc-a0ffdc418c62":{
+    id: '4c515ecf-e02f-4b52-bedc-a0ffdc418c62',
+    timestamp: 1505345767303,
+    title: 'Daffodils',
+    body: 'I wandered lonely as a Cloud\nThat floats on high over vales and Hills,\nWhen all at once I saw a crowd,\nA host, of golden Daffodils;\nBeside the Lake, beneath the trees,\nFluttering and dancing in the breeze.',
+    author: 'Bill W',    
+    category: 'udacity',
+    voteScore: 5,
+    deleted: false
+  },  
   "6ni6ok3ym7mf1p33lnez": {
     id: '6ni6ok3ym7mf1p33lnez',
     timestamp: 1468479767190,

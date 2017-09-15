@@ -8,7 +8,11 @@ import serializeForm from 'form-serialize';
 import util from '../utils/utils.js';
 import Modal from 'react-modal'
 import EditPost from './EditPost.js';
-
+import VoteDown from 'react-icons/lib/fa/angle-down';
+import VoteUp from 'react-icons/lib/fa/angle-up';
+import BackButton from 'react-icons/lib/fa/arrow-circle-left';
+import EditButton from 'react-icons/lib/ti/edit';
+import DeleteButton from 'react-icons/lib/ti/delete';
 
 class ViewPost extends Component {
 
@@ -24,8 +28,17 @@ class ViewPost extends Component {
     isPostModalOpen: false,
     isCommentModalOpen: false,
     commentValidationResults: {}
-  }
+  };
 
+  buttonStyle={
+    cursor: "pointer",
+    fill: "#cacaca"
+  };
+
+  upDownArrowStyle={
+    cursor: "pointer",    
+    paddingRight: "5px"
+  }
 
   _submitForm = (event) => {
     event.preventDefault();
@@ -69,114 +82,109 @@ class ViewPost extends Component {
 
   closeModal = () => {};
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return ( !_.isEmpty(nextProps.posts) || !_.isEmpty(nextProps.categories) )
+  }
+
+  _computeClassName = (selectedOption, listOption) => {
+    let className = "category-item";
+    if(selectedOption === listOption) className += " selectedOption";
+    return className;
+  }  
+
   render() {
     const {categories, posts, comments} = this.props;
     const {commentSortOption, commentValidationResults, isPostModalOpen, selectedCommentSortOption} = this.state;
     const post = posts.filter( post => post.id === this.props.match.params.postid )[0]
-
-    if( _.isEmpty(post) || _.isEmpty(categories)){
-      return(<div className="loading-post"></div>)
-    }
-    
     const commentsForThisPost = comments[this.props.match.params.postid] || [];
     const enabledCommentsForThisPost = commentsForThisPost.filter( comment => !comment.deleted);
     const areCommentsSortSortable = (enabledCommentsForThisPost.length !== 0); 
     const sortedCommentsList = _.orderBy(enabledCommentsForThisPost, [selectedCommentSortOption],['desc'])
     
     
-    if(post.deleted){
-      return(<div>
-        POST DELETED
-        <div>
-          <Link to="/"> {"<-"} </Link>
-        </div>
-        </div>)
+    if(_.isEmpty(post) || post.deleted){
+      return(
+        <div className="view-post-view">      
+          <div className="header display-flex justify-space-between"> 
+            <div> <Link to="/"><BackButton size={42.5} style={this.buttonStyle} /></Link></div>        
+            <div className="header-text"> POST DELETED</div>
+            <div>
+            </div>
+          </div> 
+        </div>  
+      )
     }
     
     return (
       <div className="view-post-view">
+          <div className="header display-flex justify-space-between"> 
+            <div> <Link to="/"><BackButton size={42.5} style={this.buttonStyle} /></Link></div>        
+            <div className="header-text"> POST </div>
+            <div>
+              <DeleteButton size={50} style={this.buttonStyle} span onClick={()=> this.props.deletePost(post.id)}/> 
+              <EditButton size={50} style={this.buttonStyle} onClick={()=> this.setState({isPostModalOpen: true})}/> 
+            </div>
+          </div>    
+          <div className="view-post-content">
+            <div className="post-title">{post.title} </div>
+            <div className="post-detail">{post.body} </div>
+            <div className="post-detail"><i>Owner : </i>{post.author} </div>
+            <div className="post-detail"><i>Created at</i> : {util.ts2Time(post.timestamp)} </div>
+            <div className="vote">
+              <VoteUp onClick={()=> this.changeVote(post.id, "upVote")} size={50} style={this.upDownArrowStyle}/>
+              <div className="post-detail">votes({post.voteScore}) </div>
+              <VoteDown onClick={()=> this.changeVote(post.id, "downVote")} size={50} style={this.upDownArrowStyle}/>
+            </div>
+            <br/>
+            <br/>
 
-        <span onClick={()=> this.props.deletePost(post.id)}
-        > X </span>
-        &nbsp;&nbsp;
-        <span onClick={()=> this.setState({isPostModalOpen: true})}
-        > EDIT </span>
+            <div className="comment-sub-header">COMMENTS</div>
+            <form className="add-comment-form" onSubmit={this._submitForm}>
+                <textarea rows="4" cols="50" type="multi" name="body" placeholder="body for comment ..." className="form-el"/>
+                <div className="invalid-indicator">  
+                  <span hidden={!commentValidationResults.isBodyInvalid}
+                      className="invalid-form-entry"> Invalid Comment</span>
+                </div>
+                <input type="text" name="author" placeholder="author" className="form-el"/>
+                <div className="invalid-indicator">
+                <span hidden={!commentValidationResults.isOwnerInvalid}
+                      className="invalid-form-entry"> Invalid author name </span>
+                </div>
+                <button className="form-button" > Add </button>
+              </form>
 
-        <br/>
-        <br/>
-
-        <div className="sub-header"><u>POST</u></div>
-        <div className="post-detail">Title : {post.title} </div>
-        <div className="post-detail">Body : {post.body} </div>
-        <div className="post-detail">Owner : {post.author} </div>
-        <div className="post-detail">Votes : {post.voteScore} </div>
-        <div className="post-detail">Created at : {util.ts2Time(post.timestamp)} </div>
-        <div>
-          <span onClick={()=> this.changeVote(post.id, "downVote")} > V </span>
-          <span onClick={()=> this.changeVote(post.id, "upVote")} > ^ </span>
-        </div>
-        <br/>
-        <br/>
-
-        <div className="sub-header"><u>COMMENTS</u></div>
-        <form className="add-comment-form" onSubmit={this._submitForm}>
-            <fieldset>
-              <legend>Add comment</legend>
-              <textarea rows="4" cols="50" type="multi" name="body" placeholder="body for comment ..."/>
-              <span
-                    hidden={!commentValidationResults.isBodyInvalid}
-                    className="invalid-form-entry"> Invalid Comment</span>
               <br/>
-              <input type="text" name="author" placeholder="author"/>
-              <span
-                    hidden={!commentValidationResults.isOwnerInvalid}
-                    className="invalid-form-entry"> Invalid author name </span>
               <br/>
-              <button> Add </button>
-            </fieldset>
-          </form>
 
-          <br/>
-          <br/>
-
-        {areCommentsSortSortable && (
-          <div className="sort-col" >
-            <ul className="sort-list">
-              {commentSortOption.map((sortOption, index) => (
-                <li className="sort-item"
-                    onClick={()=> this._sortComments(sortOption.field)}
-                    key={index}> Sort by {sortOption.label} </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        
-        
-        <br/>
-        <br/>
-
-
-        {!_.isEmpty(sortedCommentsList) && (
-          sortedCommentsList.map((item, index) =>
-            <CommentCard comment={item} key={index} />
-          )
-        )}
-
-        <div>
-          <Link to="/"> {"<-"} </Link>
-        </div>
-
-        <Modal
-          className='modal'
-          overlayClassName='overlay'
-          isOpen={isPostModalOpen}
-          onRequestClose={this.closeModal}
-          contentLabel='Modal'>
-          {(isPostModalOpen &&
-            <EditPost post={post} closeModal={()=> this.setState({isPostModalOpen: false})} />
-          )}
-        </Modal>
-
+            {areCommentsSortSortable && (
+              <div className="comment-sort-col display-flex" >
+                  {commentSortOption.map((sortOption, index) => (
+                    <div key={index} onClick={()=> this._sortComments(sortOption.field)}
+                         className={this._computeClassName(selectedCommentSortOption, sortOption.field)}>
+                      <span className="sort-item"> Sort by {sortOption.label} </span>
+                    </div>    
+                  ))}
+              </div>
+            )}
+            <div className="comments">
+              {!_.isEmpty(sortedCommentsList) && (
+                sortedCommentsList.map((item, index) =>
+                  <CommentCard comment={item} key={index} />
+                )
+              )}
+            </div>  
+            <Modal
+              id="editPostModal"
+              className='modal'
+              overlayClassName='overlay'
+              isOpen={isPostModalOpen}
+              onRequestClose={this.closeModal}
+              contentLabel='Modal'>
+              {(isPostModalOpen &&
+                <EditPost post={post} closeModal={()=> this.setState({isPostModalOpen: false})} />
+              )}
+            </Modal>
+         </div>     
       </div>
     );
   }

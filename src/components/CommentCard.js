@@ -5,11 +5,24 @@ import util from '../utils/utils.js';
 import Modal from 'react-modal'
 import EditComment from './EditComment.js';
 import { deleteCommentAPI, voteCommentApi } from '../actions';
+import VoteDown from 'react-icons/lib/fa/angle-down';
+import VoteUp from 'react-icons/lib/fa/angle-up';
+import EditButton from 'react-icons/lib/ti/edit';
+import DeleteButton from 'react-icons/lib/ti/delete';
 
 class CommentCard extends Component {
   state={
     isCommentModalOpen:false
-  }
+  };
+
+  upDownArrowStyle = {
+    paddingRight : "7px",
+    cursor: "pointer"
+  };
+
+  buttonStyle = {
+    cursor: "pointer"
+  };
 
   changeVote = (commentId, option) => {
     this.props.voteComment(commentId, {option})
@@ -22,24 +35,20 @@ class CommentCard extends Component {
       return(<div className=""></div>)
     }else{
       return (
-        <div className="comment-card">
-          <span
-          onClick={()=> deleteComment(comment.id)}
-          > X </span>
-
-          <span
-          onClick={()=> this.setState({ isCommentModalOpen:true })}
-          > EDIT </span>
-
-          <div> {comment.author} says {comment.body} </div>
-          <div> Created at: {util.ts2Time(comment.timestamp)}</div>
-          <div> Vote : {comment.voteScore}</div>
-          <div>
-            <span onClick={()=> this.changeVote(comment.id, "downVote")} > V </span>
-            <span onClick={()=> this.changeVote(comment.id, "upVote")} > ^ </span>
+        <div className="comment-card display-flex">
+          <div className="actions">
+            <DeleteButton  onClick={()=> deleteComment(comment.id)} size={35} style={this.buttonStyle}/>
+            <EditButton onClick={()=> this.setState({ isCommentModalOpen:true })} size={35} style={this.buttonStyle}/>
+          </div>        
+          <div className="comment">  
+            <div> <b>{comment.author}</b> says, {comment.body} </div>
+            <div> <i>Created at</i> {util.ts2Time(comment.timestamp)}</div> 
+          </div>  
+          <div className="vote">
+            <VoteUp onClick={()=> this.changeVote(comment.id, "upVote")} size={35} style={this.upDownArrowStyle}/>
+            <div> Vote({comment.voteScore})</div>          
+            <VoteDown onClick={()=> this.changeVote(comment.id, "downVote")} size={35} style={this.upDownArrowStyle}/>
           </div>
-          <br/>
-          <br/>
 
           <Modal
             className='modal'

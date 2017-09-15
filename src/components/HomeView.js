@@ -55,6 +55,11 @@ class HomeView extends Component {
     return className;
   }
 
+  _areAllPostsDeleted = postList => {
+    let deletedList = postList.filter( post => post.deleted)
+    return (deletedList.length === postList.length)
+  };
+
   render() {
     if(_.isEmpty(this.props.categories) || _.isEmpty(this.props.posts)) return(<div> Loading . . . </div>);
 
@@ -68,7 +73,7 @@ class HomeView extends Component {
 
     return (
       <div className="home-view">
-        <div className="home-view-header"> BLOG POST </div>
+        <div className="header"> BLOG POST </div>
         <div className="content display-flex justify-center">
           <div className="filter-col" >
             <div className="filter-list">
@@ -84,14 +89,15 @@ class HomeView extends Component {
           </div>
           <div className="post-col" >
             <div className="post-list">
-            {posts && (posts.map((post, index) => (
+            {!this._areAllPostsDeleted(posts) && (posts.map((post, index) => (
                       <div className="post-item" key={index}
                           hidden={post.deleted}
                           onClick={()=> this._viewPost(post.id)}>
                           <div className="post-wrapper">
                               <div className="post-title"> {post.title} </div>
+                              <div className="author-name"><i> By : </i>{post.author} </div>
                               <div> {post.body} </div>
-                              <div><i> Created at : {util.ts2Time(post.timestamp)} </i></div>
+                              <div><i> Created at : </i>{util.ts2Time(post.timestamp)} </div>
                               <div className="right-align"> 
                                 <span onClick={(event)=> {event.preventDefault();
                                                           event.stopPropagation();  
@@ -105,6 +111,13 @@ class HomeView extends Component {
                             </div>      
                       </div>
             )))}
+
+            {this._areAllPostsDeleted(posts) && (
+              <div className="add-post-place-holder" onClick={() => this.props.history.push("/addpost")}>
+                  Add some blog ...
+              </div>
+            )}
+
             </div>
           </div>
           <div className="sort-col" >
@@ -119,7 +132,7 @@ class HomeView extends Component {
          </div> 
          
          <div>
-          <div className="add-icon" onClick={() => this.props.history.push("/addpost")}> <PlusCircle size={50}/> </div>
+          <div className="add-icon" onClick={() => this.props.history.push("/addpost")}> <PlusCircle size={75}/> </div>
          </div>
       </div>
     );

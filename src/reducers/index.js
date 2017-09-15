@@ -28,6 +28,9 @@ const postsReducer = (posts = mainState.posts, action) => {
 
     case actionType.DELETE_POST:
       let filteredPosts = posts.filter(post => post.id !== action.postId);
+      let deletedPost = posts.filter(post => post.id === action.postId)[0];
+          deletedPost.deleted = true;
+          filteredPosts.push(deletedPost);    
       return filteredPosts;
 
     case actionType.VOTE_POST:

@@ -16,7 +16,7 @@ class EditComment extends Component {
   _submitForm = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    const postData = serializeForm(event.target, {hash: true})
+    const postData = serializeForm(this.formEl, {hash: true})
 
     let validationResults = {
       isBodyInvalid: _.isEmpty(postData['body'])
@@ -47,21 +47,19 @@ class EditComment extends Component {
     if(_.isEmpty(comment)) return(<div></div>)
 
     return (
-      <div className="edit-comment">
-        <form className="edit-comment-form" onSubmit={this._submitForm}>
-            <fieldset>
-              <legend>Comment details</legend>
-              <textarea rows="4" cols="50" type="multi" name="body" placeholder="body for comment ..." defaultValue={comment.body}/>
-              <span
-                    hidden={!validationResults.isBodyInvalid}
-                    className="invalid-form-entry"> Invalid comment</span>
-              <br/>
-              <button> Update </button>
-            </fieldset>
-          </form>
-          <div>
-            <div onClick={this._closeModel}> Cancel </div>
-          </div>
+      <div className="edit-comment display-flex justify-center">
+        <form className="edit-comment-form" onSubmit={this._submitForm} ref={(formEl) => { this.formEl = formEl; }}>
+            <legend className="edit-comment-sub-header"> EDIT COMMENT </legend>    
+            <textarea rows="4" cols="50" type="multi" name="body" placeholder="body for comment ..." defaultValue={comment.body}/>
+            <span
+                  hidden={!validationResults.isBodyInvalid}
+                  className="invalid-form-entry"> Invalid comment</span>
+
+            <div className="justify-space-between display-flex form-button-wrapper">              
+              <div onClick={this._submitForm} className="form-button"> Update </div>
+              <div onClick={this._closeModel} className="form-button"> Cancel </div>
+            </div>
+        </form>
       </div>
     );
   }

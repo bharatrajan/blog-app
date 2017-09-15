@@ -9,6 +9,12 @@ Raleway
   display: flex;  
 }
 
+.justify-space-between{
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+  -ms-justify-content: space-between;
+}
+
 .justify-center{
   justify-content: center;
   -webkit-justify-content: center;
@@ -21,13 +27,26 @@ Raleway
   -ms-align-items: center;   
 }
 
-.home-view-header{
-  background: rgba(45, 56, 62, 1);
+/* MODEL */
+.overlay {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  height: 100%;
+  width: 100%;
+  background: rgba(0,0,0,0.2);
+}
+
+
+.header{
+  background: #4d4d4d;
   width: 100%;
   height: 50px;
   text-align: center;
   padding-top: 30px;
-  color: #FFF;
+  color: #9D9B9B;
   font: 30px/18px Raleway;
 }
 
@@ -57,6 +76,13 @@ Raleway
   border-bottom: 2px solid #b3c3d8;
 }
 
+.add-post-place-holder{
+  width: 100%;
+  text-align: center;
+  font: 30px/18px Raleway;
+  padding: 40px 0px;  
+}
+
 .category-item, .sort-item{
   font: 20px/20px Raleway;
   padding-top: 10px; 
@@ -68,8 +94,8 @@ Raleway
 
 .add-icon{
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  bottom: 20px;
+  right: 20px;
 }
 .post-item{
   background: rgba(243, 239, 225, 0.34);
@@ -77,21 +103,169 @@ Raleway
 }
 .post-wrapper{
   padding: 10px;
-  font: bolder 15px/25px Raleway;  
+  font: 15px/25px Raleway;  
 }
 .post-title{
-  font: bolder 25px/35px RalewayEL;    
+  font: 25px/35px RalewayEL;    
 }
 
-.overlay {
-  position: absolute;
-  top: 0px;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
-  height: 100%;
+/* ADD POST*/
+.add-post-form{
+  padding-top: 30px;
+  font: 15px/25px Raleway;      
+}
+.form-wrapper{
+  padding: 0px 25%;
+}
+.form-wrapper textarea{
+  height: 342px !important;  
+}
+.form-wrapper input,.form-wrapper textarea,.form-wrapper select{
+  padding: 7px 0px;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+  background: transparent;
+  margin-bottom: 10px;
+  font: 16px Arial,Helvetica,sans-serif;
+  height: 45px;
+}
+
+.invalid-indicator{
+  height: 20px;
+  color: #F00;
+  text-align: right;
+}
+.form-el{
   width: 100%;
-  background: rgba(0,0,0,0.2);
+}
+
+.form-button{
+  box-shadow: inset 0 1px 0 0 #45d6d6;
+  background-color: #2cbbbb;
+  border: 1px solid #27a0a0;
+  display: inline-block;
+  cursor: pointer;
+  color: #fff;
+  font-family: 'Open Sans Condensed',sans-serif;
+  font-size: 14px;
+  padding: 8px 18px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.form-button-wrapper{
+  padding: 35px;
+}
+/* VIEW POST */
+.view-post-view{
+  text-align: -webkit-center;  
+}
+.view-post-view .header{
+  padding: 15px 0px;
+}
+.header-text{
+  padding: 17px;
+}
+.view-post-content{
+  text-align: left;
+  max-width: 750px;
+}
+.view-post-content .post-title{
+  text-align: center !important;
+  font: 30px/35px RalewayEL;      
+  padding: 15px 0px;
+}
+.post-detail{
+  font: 15px/25px Raleway;      
+}
+.vote{
+  text-align: right; 
+}
+
+.add-comment-form{
+  padding-top: 30px;
+  font: 15px/25px Raleway;        
+  width: 100%;
+}
+.add-comment-form textarea{
+  height: 60px !important;  
+}
+.add-comment-form input,.add-comment-form textarea{
+  padding: 7px 0px;
+  border: 0;
+  border: 1px solid #ddd;
+  background: transparent;
+  font: 16px Arial,Helvetica,sans-serif;
+  height: 20px;
+}
+
+.comment-sub-header{
+  width: 100%;
+  border-bottom: 1px solid #c1c1c1;
+  font: 15px/25px RalewayEL;    
+}
+.comment-sort-col{
+  cursor: pointer;
+  text-align: center;  
+}
+.comments{
+  padding-top: 20px; 
+}
+.comment-sort-col div{
+  width: 50%;
+  padding: 15px 0px;
+}
+
+/* COMMENT CARD */
+.comment-card{
+  font: 15px/25px Raleway;    
+}
+.comment-card .actions{
+  width: 50px;
+}
+.comment-card .comment{
+  width: 625px;
+  padding-left: 10px;
+  border-left: 1px solid #c1c1c1;  
+}
+.comment-card .vote{
+  width: 75px;  
+}
+/* EDIT POST */
+.edit-comment:active, .edit-comment:hover, .edit-comment:visited, .edit-comment:focus,
+.edit-post:active, .edit-post:hover, .edit-post:visited, .edit-post:focus,
+.modal:active, .modal:hover, .modal:visited, .modal:focus{
+  outline: none !important;
+}
+.edit-comment, .edit-post{
+  border-top: 100px solid transparent ; 
+}
+.edit-comment-form, .edit-post-form{
+  background: #FFF;
+  padding: 0px 50px 50px 50px;
+  width: 750px;
+}
+
+.edit-comment-sub-header, .edit-post-sub-header{
+  font: 30px/18px Raleway;  
+  height: 50px;
+  width: 100%;
+  text-align: center;
+  padding-top: 60px;  
+}
+
+.edit-comment-form input, .edit-comment-form textarea, .edit-post-form input,.edit-post-form textarea{
+  padding: 7px 0px;
+  border: 0;
+  width: 100%;
+  border-bottom: 1px solid #ddd;
+  background: transparent;
+  margin-bottom: 10px;
+  font: 16px Arial,Helvetica,sans-serif;
+  height: 45px;
+}
+
+.edit-comment-form textarea, .edit-post-form textarea{
+  height: 250px !important;
 }
 
 @keyframes App-logo-spin {
