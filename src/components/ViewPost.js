@@ -15,6 +15,7 @@ import EditButton from 'react-icons/lib/ti/edit';
 import DeleteButton from 'react-icons/lib/ti/delete';
 
 class ViewPost extends Component {
+  //Local state
   state = {
     commentSortOption: [
       {
@@ -32,16 +33,25 @@ class ViewPost extends Component {
     commentValidationResults: {},
   };
 
+  //Styles for button
   buttonStyle = {
     cursor: 'pointer',
     fill: '#cacaca',
   };
 
+  //Styles for button
   upDownArrowStyle = {
     cursor: 'pointer',
     paddingRight: '5px',
   };
 
+  /**
+  * @description - Triggered when user hits ADD button.
+  * @description - Validates the form and makes action dispatcher call
+  * @eventListener
+  * @param {object} event - click event from form
+  * @returns null
+  */  
   _submitForm = event => {
     event.preventDefault();
     event.stopPropagation();
@@ -79,22 +89,54 @@ class ViewPost extends Component {
     });
   };
 
-  changeVote = (postId, option) => {
-    this.props.votePost(postId, { option });
-  };
+  /**
+  * @description - Make action-dispatch for changing vote
+  * @callBack
+  * @param {object} option - body for API call
+  * @param {string} postId - Id of the post whose vote is getting changed
+  * @returns null
+  */  
+  changeVote = (postId, option) => this.props.votePost(postId, { option });
 
+  /**
+  * @description - Callback does nothing
+  * @callBack
+  * @returns null
+  */  
   closeModal = () => {};
 
+  /**
+  * @description - Just to optimize perf. Render() will be called 
+  * @description - only after component recives its posts & categories
+  * @lifeCycle
+  * @returns html template
+  */  
   shouldComponentUpdate(nextProps, nextState) {
     return !_.isEmpty(nextProps.posts) || !_.isEmpty(nextProps.categories);
   }
 
+  /**
+  * @description - Takes the selected option and available options.
+  * @description - Options can be sort or filter options.
+  * @description - Compute CSS class name for all selectable option. 
+  * @description - If option is selected, then only "selectedOption" class name will be added to classList 
+  * @util
+  * @param {string} selectedOption - Option selected by user
+  * @param {string} listOption - List of options available
+  * @returns className - A string with the name of css classes
+  */
   _computeClassName = (selectedOption, listOption) => {
     let className = 'category-item';
     if (selectedOption === listOption) className += ' selectedOption';
     return className;
   };
-
+  
+  /**
+  * @description - Renderer for this component
+  * @description - Carries HTML
+  * @lifeCycle
+  * @returns html template
+  */  
   render() {
     const { categories, posts, comments } = this.props;
     const {
@@ -117,6 +159,8 @@ class ViewPost extends Component {
       ['desc']
     );
 
+    //Negative use case
+    //In the case if user is viewing a deleted post 
     if (_.isEmpty(post) || post.deleted) {
       return (
         <div className="view-post-view">
@@ -133,8 +177,11 @@ class ViewPost extends Component {
       );
     }
 
+    //Positive use case
+    //In the case if user is viewing a post 
     return (
         <div className="view-post-view">
+           {/* Header */}
            <div className="header display-flex justify-space-between">
               <div>
                  <Link to="/">
@@ -149,7 +196,9 @@ class ViewPost extends Component {
                  this.setState({isPostModalOpen: true})}/>
               </div>
            </div>
+           {/* Body */}           
            <div className="view-post-content">
+              {/* Detailed post */}
               <div className="post-title">{post.title} </div>
               <div className="post-detail">{post.body} </div>
               <div className="post-detail"><i>Owner : </i>{post.author} </div>
@@ -164,6 +213,8 @@ class ViewPost extends Component {
               <br/>
               <br/>
               <div className="comment-sub-header">COMMENTS</div>
+              
+              {/* Form to add new comment */}
               <form className="add-comment-form" onSubmit={this._submitForm}>
                  <textarea rows="4" cols="50" type="multi" name="body" placeholder="body for comment ..." className="form-el"/>
                  <div className="invalid-indicator">
@@ -177,8 +228,11 @@ class ViewPost extends Component {
                  </div>
                  <button className="form-button" > Add </button>
               </form>
+              
               <br/>
               <br/>
+
+              {/* Comment sort options: Visible only if there are comments to sort */}
               {areCommentsSortSortable && (
               <div className="comment-sort-col display-flex" >
                  {commentSortOption.map((sortOption, index) => (
@@ -189,6 +243,8 @@ class ViewPost extends Component {
                  ))}
               </div>
               )}
+              
+              {/* List of comments */}
               <div className="comments">
                  {!_.isEmpty(sortedCommentsList) && (
                  sortedCommentsList.map((item, index) =>
@@ -214,8 +270,21 @@ class ViewPost extends Component {
   }
 }
 
+/**
+* @description - Maps updated state to props of this component
+* @callBack
+* @param {object} state - state from store
+* @param {object} propsFromParent - props pushed from parent component
+* @returns categories
+*/
 const mapStateToProps = (state, propsFromParent) => state;
 
+/**
+* @description - Maps action dispatchers to props of this component
+* @callBack
+* @param {object} dispatch - dispatch from store
+* @returns object containing dispatchers
+*/
 const mapDispatchToProps = dispatch => ({
   deletePost: postId => dispatch(deletePostApi(postId)),
   addComment: newComment => dispatch(addComment(newComment)),

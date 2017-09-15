@@ -6,10 +6,22 @@ import { editPostApi } from '../actions';
 import { withRouter } from 'react-router-dom';
 
 class EditPost extends Component {
+  /**
+  * @description - State for this component .
+  * @description - Carry validation state of internal form
+  * @type object
+  */
   state = {
     validationResults: {},
   };
 
+  /**
+  * @description - Triggered when user hits ADD button.
+  * @description - Validates the form and makes action dispatcher call
+  * @eventListener
+  * @param {object} event - click event from form
+  * @returns null
+  */  
   _submitForm = event => {
     event.preventDefault();
     event.stopPropagation();
@@ -29,12 +41,25 @@ class EditPost extends Component {
       });
       this._closeModel();
     } else this.setState({ validationResults });
+    return null;
   };
 
+  /**
+  * @description - Closes this modal
+  * @callback
+  * @returns null
+  */  
   _closeModel = () => {
     this.props.closeModal();
+    return null;
   };
 
+  /**
+  * @description - Renderer for this component
+  * @description - Carries HTML
+  * @lifeCycle
+  * @returns html template
+  */  
   render() {
     const { post } = this.props;
     const { validationResults } = this.state;
@@ -64,6 +89,12 @@ class EditPost extends Component {
   }
 }
 
+/**
+* @description - Maps action dispatchers to props of this component
+* @callBack
+* @param {object} dispatch - dispatch from store
+* @returns object containing dispatchers
+*/
 const mapDispatchToProps = dispatch => ({
   editPost: (postId, updatedPost) => dispatch(editPostApi(postId, updatedPost)),
 });

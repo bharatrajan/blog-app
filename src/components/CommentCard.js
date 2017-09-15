@@ -11,10 +11,12 @@ import EditButton from 'react-icons/lib/ti/edit';
 import DeleteButton from 'react-icons/lib/ti/delete';
 
 class CommentCard extends Component {
+  //Local state
   state = {
     isCommentModalOpen: false,
   };
 
+  //Styles for buttons
   upDownArrowStyle = {
     paddingRight: '7px',
     cursor: 'pointer',
@@ -24,10 +26,21 @@ class CommentCard extends Component {
     cursor: 'pointer',
   };
 
-  changeVote = (commentId, option) => {
-    this.props.voteComment(commentId, { option });
-  };
+  /**
+  * @description - Dispatch action to update vote
+  * @callBack
+  * @param {object} option - VoteOption "upvote" | "downvote"
+  * @param {string} commentId - Id of comment getting votted
+  * @returns null
+  */  
+  changeVote = (commentId, option) => this.props.voteComment(commentId, { option });
 
+  /**
+  * @description - Renderer for this component
+  * @description - Carries HTML
+  * @lifeCycle
+  * @returns html template
+  */  
   render() {
     const { comment, deleteComment } = this.props;
     const { isCommentModalOpen } = this.state;
@@ -70,8 +83,12 @@ class CommentCard extends Component {
   }
 }
 
-const mapStateToProps = (state, propsFromParent) => state;
-
+/**
+* @description - Maps action dispatchers to props of this component
+* @callBack
+* @param {object} dispatch - dispatch from store
+* @returns object containing dispatchers
+*/
 const mapDispatchToProps = dispatch => ({
   deleteComment: commentId => dispatch(deleteCommentAPI(commentId)),
   voteComment: (commentId, voteOption) => {
@@ -79,4 +96,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CommentCard);
+export default connect(() => null, mapDispatchToProps)(CommentCard);

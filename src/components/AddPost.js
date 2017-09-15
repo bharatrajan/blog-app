@@ -10,10 +10,22 @@ import {withRouter} from 'react-router-dom';
 
 class AddPost extends Component {
 
+  /**
+  * @description - State for this component .
+  * @description - Carry validation state of internal form
+  * @type object
+  */
   state = {
     validationResults : {}
   };
 
+  /**
+  * @description - Triggered when user hits ADD button.
+  * @description - Validates the form and makes action dispatcher call
+  * @eventListener
+  * @param {object} event - click event from form
+  * @returns null
+  */
   _submitForm = (event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -43,8 +55,16 @@ class AddPost extends Component {
         this.props.history.push("/");
     }else
       this.setState({ validationResults });
+    
+      return null;  
   }
 
+  /**
+  * @description - Renderer for this component
+  * @description - Carries HTML
+  * @lifeCycle
+  * @returns html template
+  */
   render() {
 
     const {categories} = this.props;
@@ -98,11 +118,24 @@ class AddPost extends Component {
   }
 }
 
+/**
+* @description - Maps updated state to props of this component
+* @callBack
+* @param {object} state - state from store
+* @param {object} propsFromParent - props pushed from parent component
+* @returns categories
+*/
 const mapStateToProps = (state, propsFromParent) => {
   if(!_.isEmpty(state.categories)) return {categories : state.categories};
   return {categories : []}
 };
 
+/**
+* @description - Maps action dispatchers to props of this component
+* @callBack
+* @param {object} dispatch - dispatch from store
+* @returns object containing dispatchers
+*/
 const mapDispatchToProps = dispatch => ({
   addPost : (newPost) => dispatch(addPost(newPost))
 });

@@ -9,6 +9,7 @@ import VoteDown from 'react-icons/lib/fa/angle-down';
 import VoteUp from 'react-icons/lib/fa/angle-up';
 
 class HomeView extends Component {
+  //Local state
   state = {
     sortList: [
       {
@@ -25,26 +26,53 @@ class HomeView extends Component {
     commentCount: {},
   };
 
-  changeVote = (postId, option) => {
-    this.props.votePost(postId, { option });
-  };
+  /**
+  * @description - Make action-dispatch for changing vote
+  * @callBack
+  * @param {object} option - body for API call
+  * @param {string} postId - Id of the post whose vote is getting changed
+  * @returns null
+  */
+  changeVote = (postId, option) => this.props.votePost(postId, { option });
 
-  _viewPost = postId => {
-    this.props.history.push(`/viewpost/${postId}`);
-  };
+  /**
+  * @description - Updates route witht he postId
+  * @callBack
+  * @param {string} postId - Id of the post who is getting viewed
+  * @returns null
+  */
+  _viewPost = postId => this.props.history.push(`/viewpost/${postId}`);
 
+  /**
+  * @description - Takes a sort option and sorts list of post. Then updates local-state 
+  * @util
+  * @param {string} sortOption - "voteScore" | "timeStamp"
+  * @returns null
+  */
   _sortPost = sortOption => {
     this.setState({
       selectedSortOption: sortOption,
     });
   };
 
+  /**
+  * @description - Takes a filterField and filter list of post. Then updates local-state 
+  * @util
+  * @param {string} filterField - Any field of the catogeries ("react" | "redux" | "udacity")
+  * @returns null
+  */
   _filterByCategory = filterField => {
     this.setState({
       selectedFilterOption: filterField,
     });
   };
 
+  /**
+  * @description - Calculated number of comments available for the post 
+  * @util
+  * @param {string} postId - id of the post which need the no. comments
+  * @returns number of comment for postId
+  */
   _computeCommentCount = postId => {
     if (
       _.isEmpty(this.props.comments) ||
@@ -58,17 +86,40 @@ class HomeView extends Component {
     return enabledCommentsForPosts.length;
   };
 
+  /**
+  * @description - Takes the selected option and available options.
+  * @description - Options can be sort or filter options.
+  * @description - Compute CSS class name for all selectable option. 
+  * @description - If option is selected, then only "selectedOption" class name will be added to classList 
+  * @util
+  * @param {string} selectedOption - Option selected by user
+  * @param {string} listOption - List of options available
+  * @returns className - A string with the name of css classes
+  */
   _computeClassName = (selectedOption, listOption) => {
     let className = 'category-item';
     if (selectedOption === listOption) className += ' selectedOption';
     return className;
   };
 
+  /**
+  * @description - Util to check is all the posts are deleted
+  * @description - Used in negative use case
+  * @util
+  * @param {array} postList - array of posts from props
+  * @returns boolean 
+  */
   _areAllPostsDeleted = postList => {
     let deletedList = postList.filter(post => post.deleted);
     return deletedList.length === postList.length;
   };
 
+  /**
+  * @description - Renderer for this component
+  * @description - Carries HTML
+  * @lifeCycle
+  * @returns html template
+  */  
   render() {
     if (_.isEmpty(this.props.categories) || _.isEmpty(this.props.posts))
       return <div> Loading . . . </div>;
@@ -159,7 +210,21 @@ class HomeView extends Component {
   }
 }
 
+/**
+* @description - Maps updated state to props of this component
+* @callBack
+* @param {object} state - state from store
+* @param {object} propsFromParent - props pushed from parent component
+* @returns categories
+*/
 const mapStateToProps = (state, propsFromParent) => state;
+
+/**
+* @description - Maps action dispatchers to props of this component
+* @callBack
+* @param {object} dispatch - dispatch from store
+* @returns object containing dispatchers
+*/
 const mapDispatchToProps = dispatch => ({
   getAllPosts: () => dispatch(getAllPosts()),
   votePost: (postId, voteOption) => {

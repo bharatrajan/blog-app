@@ -10,26 +10,15 @@ import AddPost from './AddPost.js';
 import ViewPost from './ViewPost.js';
 
 class App extends Component {
-  isCommentRequested = false;
+  //Flag
+  isCommentRequested = false;  
 
-  componentWillReceiveProps = newProps => {
-    if (!_.isEmpty(newProps.posts)) {
-      this.setState({
-        posts: _.orderBy(newProps.posts, ['voteScore'], ['desc']),
-      });
-
-      if (!this.isCommentRequested) {
-        newProps.posts.map(post => this.props.getAllComments(post.id));
-        this.isCommentRequested = true;
-      }
-    }
-
-    if (!_.isEmpty(newProps.categories))
-      this.setState({
-        categories: newProps.categories,
-      });
-  };
-
+  /**
+  * @description - Do dispatch calls getAllCategories & getAllPosts
+  * @description - Carries HTML
+  * @lifeCycle
+  * @returns null
+  */
   componentDidMount = () => {
     if (!this.props.isInitialized) {
       this.props.getAllCategories();
@@ -37,7 +26,29 @@ class App extends Component {
     }
     return null;
   };
+  
+  /**
+  * @description - Massages the recieved state 
+  * @description - Makes get-comments calls for each post
+  * @lifeCycle
+  * @returns null
+  */  
+  componentWillReceiveProps = newProps => {
+    if (!_.isEmpty(newProps.posts)) {
+      if (!this.isCommentRequested) {
+        newProps.posts.map(post => this.props.getAllComments(post.id));
+        this.isCommentRequested = true;
+      }
+    }
+    return null;
+  };
 
+  /**
+  * @description - Renderer for this component
+  * @description - Carries HTML
+  * @lifeCycle
+  * @returns html template
+  */
   render() {
     return(
           <div className="App">
@@ -74,8 +85,21 @@ class App extends Component {
   }
 }
 
+/**
+* @description - Maps updated state to props of this component
+* @callBack
+* @param {object} state - state from store
+* @param {object} propsFromParent - props pushed from parent component
+* @returns state
+*/
 const mapStateToProps = (state, propsFromParent) => state;
 
+/**
+* @description - Maps action dispatchers to props of this component
+* @callBack
+* @param {object} dispatch - dispatch from store
+* @returns object containing dispatchers
+*/
 const mapDispatchToProps = dispatch => ({
   getAllPosts: () => dispatch(fetchPosts()),
   getAllCategories: () => dispatch(fetchCatogeries()),
