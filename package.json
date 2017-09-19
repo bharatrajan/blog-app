@@ -27,10 +27,12 @@
     "concurrently": "^3.5.0"
   },
   "scripts": {
-    "start": "concurrently \"npm run start-api\" \"npm run start-client\"",
+    "start": "node build-server.js",
+    "start-dev": "concurrently \"npm run start-api\" \"npm run start-client\"",
     "start-client": "react-scripts start",
     "start-api": "node server.js",
     "build": "react-scripts build",
+    "deploy": "cf push",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
@@ -42,6 +44,5 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/bharatrajan/blog-app/issues"
-  },
-  "homepage": "https://github.com/bharatrajan/blog-app#readme"
+  }
 }

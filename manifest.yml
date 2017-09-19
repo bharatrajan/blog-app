@@ -1,0 +1,5 @@
+---
+applications:
+ - name: bharatBlogApp
+   random-route: true
+   memory: 64M

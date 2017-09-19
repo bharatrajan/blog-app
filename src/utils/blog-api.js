@@ -1,4 +1,6 @@
-const api = 'http://localhost:3001';
+let api = '/api';
+if(window.location.hostname.indexOf("localhost") > -1)
+  api = 'http://localhost:3001/api';
 
 // Generate a unique token for storing your bookshelf data on the backend server.
 let token = localStorage.token;
