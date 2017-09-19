@@ -6,23 +6,23 @@ const defaultData = {
   "8xf0y6ziyjabvozdd253nd": {
     id: '8xf0y6ziyjabvozdd253nd',
     timestamp: 1467166872634,
-    title: 'Udacity is the best place to learn React',
+    title: 'React is a web component based JS UI library',
     body: 'Everyone says so after all.',
     author: 'thingtwo',
     category: 'react',
     voteScore: 6,
-    deleted: false 
+    deleted: false
   },
   "4c515ecf-e02f-4b52-bedc-a0ffdc418c62":{
     id: '4c515ecf-e02f-4b52-bedc-a0ffdc418c62',
     timestamp: 1505345767303,
-    title: 'Daffodils',
-    body: 'I wandered lonely as a Cloud\nThat floats on high over vales and Hills,\nWhen all at once I saw a crowd,\nA host, of golden Daffodils;\nBeside the Lake, beneath the trees,\nFluttering and dancing in the breeze.',
-    author: 'Bill W',    
-    category: 'udacity',
+    title: 'Polymer is light weight',
+    body: 'Its light weight. It can use googles material design',
+    author: 'Bill W',
+    category: 'polymer',
     voteScore: 5,
     deleted: false
-  },  
+  },
   "6ni6ok3ym7mf1p33lnez": {
     id: '6ni6ok3ym7mf1p33lnez',
     timestamp: 1468479767190,
@@ -56,7 +56,7 @@ function get (token, id) {
   return new Promise((res) => {
     const posts = getData(token)
     res(
-      posts[id].deleted 
+      posts[id].deleted
         ? {}
         : posts[id]
     )
@@ -75,7 +75,7 @@ function getAll (token) {
 function add (token, post) {
   return new Promise((res) => {
     let posts = getData(token)
-    
+
     posts[post.id] = {
       id: post.id,
       timestamp: post.timestamp,
@@ -86,7 +86,7 @@ function add (token, post) {
       voteScore: 1,
       deleted: false
     }
-     
+
     res(posts[post.id])
   })
 }

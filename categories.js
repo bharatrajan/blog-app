@@ -14,8 +14,8 @@ const defaultData = {
         path: 'redux'
       },
       {
-        name: 'udacity',
-        path: 'udacity'
+        name: 'polymer',
+        path: 'polymer'
       }
   ]
 }
@@ -32,7 +32,7 @@ function getData (token) {
 
 function getAll (token) {
   return new Promise((res) => {
-    res(getData(token))    
+    res(getData(token))
   })
 }
 
