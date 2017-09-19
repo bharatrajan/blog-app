@@ -1,7 +1,3 @@
-TO RUN THIS APP
-- npm i
-- yarn start
-
 ## Blog App 
 
 [`DEMO`](http://bharat-blog-app-using-react-redux.mybluemix.net)
@@ -10,6 +6,10 @@ This project contains the following functionalities
 - User views the list of available blogs
 - User can create a new blog
 - User views detailed view, which includes comments, of 1 blog, upon selection. 
+
+## To Run the Locally
+- npm i
+- yarn start
 
 ## Imports
 - react-redux :: For state maintainence 
