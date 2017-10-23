@@ -1,12 +1,23 @@
 import { combineReducers } from 'redux';
 import { actionType } from '../actions';
 
+/**
+* @description - Default state object
+*/
 let mainState = {
   posts: [],
   categories: [],
   comments: {},
 };
 
+/**
+* @description - Posts reducer. Handles all post related actions
+* @description - Updates the state for its subscriber
+* @reducer
+* @param {object} posts - Object from actionDispatcher
+* @param {object} action - Object from actionDispatcher
+* @returns post object
+*/
 const postsReducer = (posts = mainState.posts, action) => {
   switch (action.type) {
     case actionType.GET_POSTS:
@@ -46,6 +57,14 @@ const postsReducer = (posts = mainState.posts, action) => {
   }
 };
 
+/**
+* @description - Comments reducer. Handles all comment related actions
+* @description - Updates the state for its subscriber
+* @reducer
+* @param {object} comments - Object from actionDispatcher
+* @param {object} action - Object from actionDispatcher
+* @returns comment object
+*/
 const commentReducer = (comments = mainState.comments, action) => {
   switch (action.type) {
     case actionType.GET_COMMENTS:
@@ -95,6 +114,14 @@ const commentReducer = (comments = mainState.comments, action) => {
   }
 };
 
+/**
+* @description - Categories reducer. Handles all category related actions
+* @description - Updates the state for its subscriber
+* @reducer
+* @param {object} categories - Object from actionDispatcher
+* @param {object} action - Object from actionDispatcher
+* @returns category object 
+*/
 const categoryReducer = (categories = mainState.categories, action) => {
   switch (action.type) {
     case actionType.RECEIVE_CATEGORIES:
